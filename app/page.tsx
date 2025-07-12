@@ -20,11 +20,11 @@ export default function Dashboard() {
       case 'spaces':
         return (
           <div className="max-w-7xl mx-auto space-y-6 px-4 sm:px-6 lg:px-8">
-            <div className="bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-800 rounded-2xl p-6 sm:p-8 text-white relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-transparent"></div>
+            <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 rounded-2xl p-6 sm:p-8 text-white relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-transparent"></div>
               <div className="relative z-10">
                 <h1 className="text-2xl sm:text-3xl font-bold mb-2">Community Spaces 🏠</h1>
-                <p className="text-purple-100 text-sm sm:text-base">Create dedicated spaces for your community members to connect and collaborate</p>
+                <p className="text-blue-100 text-sm sm:text-base">Create dedicated spaces for your community members to connect and collaborate</p>
               </div>
             </div>
             <SpacesSection />
@@ -77,7 +77,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-950 via-blue-900 to-blue-950">
       {/* Desktop Sidebar - Hidden on mobile */}
       <div className="hidden lg:block">
         <Sidebar activeSection={activeSection} setActiveSection={setActiveSection} />

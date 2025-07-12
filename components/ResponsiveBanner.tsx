@@ -6,7 +6,7 @@ export function ResponsiveBanner() {
   return (
     <div className="relative w-full">
       {/* Main Banner */}
-      <div className="relative bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-800 rounded-none sm:rounded-2xl overflow-hidden">
+      <div className="relative bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 rounded-none sm:rounded-2xl overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-20">
           <div className="absolute top-4 right-4 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
@@ -17,17 +17,17 @@ export function ResponsiveBanner() {
         <div className="relative z-10 px-4 sm:px-8 py-8 sm:py-12">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
             <div className="mb-6 lg:mb-0">
-              <p className="text-purple-200 mb-2 text-sm sm:text-base">September 4, 2023</p>
+              <p className="text-blue-200 mb-2 text-sm sm:text-base">September 4, 2023</p>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 text-white leading-tight">
                 Welcome back, John!
               </h1>
-              <p className="text-purple-100 text-sm sm:text-base lg:text-lg max-w-md">
+              <p className="text-blue-100 text-sm sm:text-base lg:text-lg max-w-md">
                 Continue your learning journey and connect with the community
               </p>
               
               {/* Mobile CTA */}
               <div className="mt-6 lg:hidden">
-                <button className="w-full sm:w-auto bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-6 py-3 rounded-xl transition-all duration-300 font-medium flex items-center justify-center space-x-2 border border-white/30 hover:border-white/50 touch-manipulation">
+                <button className="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl transition-all duration-300 font-medium flex items-center justify-center space-x-2 border border-blue-400/30 hover:border-blue-300/50 touch-manipulation shadow-lg">
                   <span>Continue Learning</span>
                   <Star className="w-4 h-4" />
                 </button>
@@ -36,7 +36,7 @@ export function ResponsiveBanner() {
             
             {/* Desktop Illustration */}
             <div className="hidden lg:block">
-              <div className="w-32 h-32 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-full flex items-center justify-center shadow-2xl">
+              <div className="w-32 h-32 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center shadow-2xl">
                 <GraduationCap className="w-16 h-16 text-white" />
               </div>
             </div>
