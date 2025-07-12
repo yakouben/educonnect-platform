@@ -1,129 +1,182 @@
 'use client';
 
-import * as React from 'react';
-import * as ToastPrimitives from '@radix-ui/react-toast';
-import { cva, type VariantProps } from 'class-variance-authority';
-import { X } from 'lucide-react';
-
 import { cn } from '@/lib/utils';
+import { ReactNode, useEffect, useState } from 'react';
+import { CheckCircle, AlertCircle, X, Info, AlertTriangle } from 'lucide-react';
 
-const ToastProvider = ToastPrimitives.Provider;
+export interface ToastData {
+  id: string;
+  title: string;
+  description?: string;
+  variant?: 'success' | 'error' | 'warning' | 'info';
+  duration?: number;
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
+}
 
-const ToastViewport = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Viewport>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Viewport>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Viewport
-    ref={ref}
-    className={cn(
-      'fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]',
-      className
-    )}
-    {...props}
-  />
-));
-ToastViewport.displayName = ToastPrimitives.Viewport.displayName;
+interface ToastProps {
+  toast: ToastData;
+  onClose: (id: string) => void;
+}
 
-const toastVariants = cva(
-  'group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[var(--radix-toast-swipe-end-x)] data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full',
-  {
-    variants: {
-      variant: {
-        default: 'border bg-background text-foreground',
-        destructive:
-          'destructive group border-destructive bg-destructive text-destructive-foreground',
-      },
+function Toast({ toast, onClose }: ToastProps) {
+  const [isVisible, setIsVisible] = useState(false);
+  const [isLeaving, setIsLeaving] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+    
+    if (toast.duration !== 0) {
+      const timer = setTimeout(() => {
+        handleClose();
+      }, toast.duration || 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [toast.duration]);
+
+  const handleClose = () => {
+    setIsLeaving(true);
+    setTimeout(() => {
+      onClose(toast.id);
+    }, 300);
+  };
+
+  const variants = {
+    success: {
+      icon: CheckCircle,
+      className: 'border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-100',
+      iconColor: 'text-emerald-500',
     },
-    defaultVariants: {
-      variant: 'default',
+    error: {
+      icon: AlertCircle,
+      className: 'border-red-200 bg-red-50 text-red-900 dark:border-red-800 dark:bg-red-900/20 dark:text-red-100',
+      iconColor: 'text-red-500',
     },
-  }
-);
+    warning: {
+      icon: AlertTriangle,
+      className: 'border-yellow-200 bg-yellow-50 text-yellow-900 dark:border-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-100',
+      iconColor: 'text-yellow-500',
+    },
+    info: {
+      icon: Info,
+      className: 'border-blue-200 bg-blue-50 text-blue-900 dark:border-blue-800 dark:bg-blue-900/20 dark:text-blue-100',
+      iconColor: 'text-blue-500',
+    },
+  };
 
-const Toast = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Root>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
-    VariantProps<typeof toastVariants>
->(({ className, variant, ...props }, ref) => {
+  const variant = variants[toast.variant || 'info'];
+  const Icon = variant.icon;
+
   return (
-    <ToastPrimitives.Root
-      ref={ref}
-      className={cn(toastVariants({ variant }), className)}
-      {...props}
-    />
+    <div
+      className={cn(
+        'pointer-events-auto w-full max-w-sm overflow-hidden rounded-2xl border shadow-lg backdrop-blur-xl transition-all duration-300',
+        'transform-gpu',
+        isVisible && !isLeaving ? 'translate-x-0 opacity-100 scale-100' : 'translate-x-full opacity-0 scale-95',
+        variant.className
+      )}
+    >
+      <div className="p-4">
+        <div className="flex items-start space-x-3">
+          <Icon className={cn('w-5 h-5 mt-0.5 flex-shrink-0', variant.iconColor)} />
+          
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium">{toast.title}</p>
+            {toast.description && (
+              <p className="mt-1 text-sm opacity-80">{toast.description}</p>
+            )}
+            
+            {toast.action && (
+              <div className="mt-3">
+                <button
+                  onClick={toast.action.onClick}
+                  className="text-sm font-medium hover:underline focus:outline-none focus:underline"
+                >
+                  {toast.action.label}
+                </button>
+              </div>
+            )}
+          </div>
+          
+          <button
+            onClick={handleClose}
+            className="flex-shrink-0 p-1 rounded-lg hover:bg-black/5 transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+      
+      {/* Progress bar */}
+      {toast.duration !== 0 && (
+        <div className="h-1 bg-black/10">
+          <div 
+            className="h-full bg-current opacity-50 transition-all ease-linear"
+            style={{
+              width: isVisible ? '0%' : '100%',
+              transitionDuration: `${toast.duration || 5000}ms`,
+            }}
+          />
+        </div>
+      )}
+    </div>
   );
-});
-Toast.displayName = ToastPrimitives.Root.displayName;
+}
 
-const ToastAction = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Action>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Action>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Action
-    ref={ref}
-    className={cn(
-      'inline-flex h-8 shrink-0 items-center justify-center rounded-md border bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 group-[.destructive]:border-muted/40 group-[.destructive]:hover:border-destructive/30 group-[.destructive]:hover:bg-destructive group-[.destructive]:hover:text-destructive-foreground group-[.destructive]:focus:ring-destructive',
-      className
-    )}
-    {...props}
-  />
-));
-ToastAction.displayName = ToastPrimitives.Action.displayName;
+interface ToastContainerProps {
+  toasts: ToastData[];
+  onClose: (id: string) => void;
+}
 
-const ToastClose = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Close>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Close>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Close
-    ref={ref}
-    className={cn(
-      'absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600',
-      className
-    )}
-    toast-close=""
-    {...props}
-  >
-    <X className="h-4 w-4" />
-  </ToastPrimitives.Close>
-));
-ToastClose.displayName = ToastPrimitives.Close.displayName;
+export function ToastContainer({ toasts, onClose }: ToastContainerProps) {
+  return (
+    <div className="fixed top-4 right-4 z-50 flex flex-col space-y-2 pointer-events-none">
+      {toasts.map((toast) => (
+        <Toast key={toast.id} toast={toast} onClose={onClose} />
+      ))}
+    </div>
+  );
+}
 
-const ToastTitle = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Title>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Title>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Title
-    ref={ref}
-    className={cn('text-sm font-semibold', className)}
-    {...props}
-  />
-));
-ToastTitle.displayName = ToastPrimitives.Title.displayName;
+// Hook for managing toasts
+export function useToast() {
+  const [toasts, setToasts] = useState<ToastData[]>([]);
 
-const ToastDescription = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Description>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Description>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Description
-    ref={ref}
-    className={cn('text-sm opacity-90', className)}
-    {...props}
-  />
-));
-ToastDescription.displayName = ToastPrimitives.Description.displayName;
+  const addToast = (toast: Omit<ToastData, 'id'>) => {
+    const id = Math.random().toString(36).substr(2, 9);
+    setToasts(prev => [...prev, { ...toast, id }]);
+  };
 
-type ToastProps = React.ComponentPropsWithoutRef<typeof Toast>;
+  const removeToast = (id: string) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  };
 
-type ToastActionElement = React.ReactElement<typeof ToastAction>;
+  const success = (title: string, description?: string) => {
+    addToast({ title, description, variant: 'success' });
+  };
 
-export {
-  type ToastProps,
-  type ToastActionElement,
-  ToastProvider,
-  ToastViewport,
-  Toast,
-  ToastTitle,
-  ToastDescription,
-  ToastClose,
-  ToastAction,
-};
+  const error = (title: string, description?: string) => {
+    addToast({ title, description, variant: 'error' });
+  };
+
+  const warning = (title: string, description?: string) => {
+    addToast({ title, description, variant: 'warning' });
+  };
+
+  const info = (title: string, description?: string) => {
+    addToast({ title, description, variant: 'info' });
+  };
+
+  return {
+    toasts,
+    addToast,
+    removeToast,
+    success,
+    error,
+    warning,
+    info,
+  };
+}
