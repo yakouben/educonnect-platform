@@ -2,7 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { useState, useRef, useEffect } from 'react';
-import { Search, X, Filter, Clock, Trending, Hash } from 'lucide-react';
+import { Search, X, Filter, Clock, TrendingUp, Hash } from 'lucide-react';
 import { GlassCard } from './glass-card';
 
 interface SearchResult {
@@ -286,7 +286,7 @@ export function EnhancedSearch({
                 {trendingSearches.length > 0 && (
                   <div>
                     <div className="flex items-center space-x-2 mb-2">
-                      <Trending className="h-4 w-4 text-gray-400" />
+                      <TrendingUp className="h-4 w-4 text-gray-400" />
                       <h3 className="text-sm font-medium text-gray-500">Trending</h3>
                     </div>
                     <div className="flex flex-wrap gap-2">

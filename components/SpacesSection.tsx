@@ -179,34 +179,6 @@ export function SpacesSection() {
             </div>
           ))}
         </div>
-
-        {/* Quick Actions */}
-        <div className="p-4 sm:p-6 border-t border-white/10">
-          <div className="p-4 sm:p-5 bg-gradient-to-r from-white/10 to-white/5 rounded-xl border border-white/20 backdrop-blur-sm">
-            <div className="flex items-center space-x-2 mb-3 sm:mb-4">
-              <div className="w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center shadow-lg">
-                <Lightbulb className="w-3 h-3 text-white" />
-              </div>
-              <h3 className="font-semibold text-white text-sm sm:text-base">Space Ideas</h3>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-              <button className="text-left p-3 sm:p-4 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/20 transition-colors border border-white/20">
-                <div className="text-xs sm:text-sm font-medium text-white flex items-center space-x-2">
-                  <Users className="w-3 h-3 sm:w-4 sm:h-4" />
-                  <span>Study Groups</span>
-                </div>
-                <div className="text-xs text-white/70 mt-1">Collaborative learning</div>
-              </button>
-              <button className="text-left p-3 sm:p-4 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/20 transition-colors border border-white/20">
-                <div className="text-xs sm:text-sm font-medium text-white flex items-center space-x-2">
-                  <Rocket className="w-3 h-3 sm:w-4 sm:h-4" />
-                  <span>Project Teams</span>
-                </div>
-                <div className="text-xs text-white/70 mt-1">Build together</div>
-              </button>
-            </div>
-          </div>
-        </div>
       </GlassCard>
 
       {/* Create Space Modal */}

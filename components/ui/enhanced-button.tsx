@@ -7,7 +7,7 @@ import { Loader2 } from 'lucide-react';
 interface EnhancedButtonProps {
   children: ReactNode;
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
-  variant?: 'primary' | 'secondary' | 'ghost' | 'destructive' | 'success';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'destructive' | 'success' | 'outline';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
   disabled?: boolean;
@@ -61,10 +61,10 @@ export function EnhancedButton({
   };
 
   const sizes = {
-    sm: 'px-3 py-1.5 text-sm rounded-lg',
-    md: 'px-4 py-2 text-sm rounded-xl',
-    lg: 'px-6 py-3 text-base rounded-xl',
-    xl: 'px-8 py-4 text-lg rounded-2xl',
+    sm: 'h-8 px-3 text-sm rounded-xl',
+    md: 'h-10 px-4 text-sm rounded-xl',
+    lg: 'h-12 px-6 text-base rounded-2xl',
+    xl: 'h-14 px-8 text-lg rounded-2xl',
   };
 
   return (
@@ -78,12 +78,8 @@ export function EnhancedButton({
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30',
         'disabled:pointer-events-none disabled:opacity-50',
         
-        // Hover effects
-        
-        // Size variants
-        size === 'sm' && 'h-8 px-3 text-sm',
-        size === 'md' && 'h-10 px-4 text-sm',
-        size === 'lg' && 'h-12 px-6 text-base',
+        // Size and border radius variants
+        sizes[size],
         
         // Width variants
         fullWidth && 'w-full',

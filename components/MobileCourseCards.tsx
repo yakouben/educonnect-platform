@@ -233,7 +233,7 @@ export function MobileCourseCards() {
                 {/* Action Button */}
                 <button className="relative z-10 w-full bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white py-3 rounded-xl transition-all duration-300 font-medium flex items-center justify-center space-x-2 border border-white/30 hover:border-white/50">
                   <Play className="w-4 h-4" />
-                  <span classN>Continue Learning</span>
+                  <span>Continue Learning</span>
                   <span className="text-lg">✨</span>
                 </button>
               </div>

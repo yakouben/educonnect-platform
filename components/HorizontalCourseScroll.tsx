@@ -34,9 +34,6 @@ const courses = [
     videoThumbnail: 'https://img.youtube.com/vi/c9Wg6Cb_YlU/maxresdefault.jpg',
     progress: 45,
     duration: '28.3 hours',
-    students: 8923,
-    rating: 4.8,
-    price: '$79.99',
     category: 'Design',
     level: 'Intermediate',
     completedLessons: 34,
@@ -143,7 +140,7 @@ export function HorizontalCourseScroll() {
             <Video className="w-4 h-4 text-white" />
           </div>
         </h3>
-        <button className="flex items-center space-x-1 text-blue-600 dark:text-blue-400 text-sm font-medium hover:text-blue-700 dark:hover:text-blue-300 transition-colors touch-manipulation">
+        <button className="flex items-center space-x-1 text-blue-600 dark:text-blue-400 text-sm font-medium hover:text-blue-700 dark:hover:text-blue-300 transition-colors touch-manipulation rounded-xl px-3 py-2 hover:bg-blue-50 dark:hover:bg-blue-900/20">
           <span>View All</span>
           <ChevronRight className="w-4 h-4" />
         </button>
@@ -156,7 +153,7 @@ export function HorizontalCourseScroll() {
             {courses.map((course, index) => (
               <GlassCard
                 key={course.id}
-                className={`relative w-80 sm:w-96 flex-shrink-0 overflow-hidden animate-scale-in`}
+                className={`relative w-80 sm:w-96 flex-shrink-0 overflow-hidden`}
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 {/* Video Thumbnail */}
@@ -169,7 +166,7 @@ export function HorizontalCourseScroll() {
                   
                   {/* Play Button Overlay */}
                   <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
-                    <button className="w-16 h-16 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-2xl transform transition-transform duration-200">
+                    <button className="w-16 h-16 bg-white/90 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-2xl transform transition-transform duration-200 hover:scale-105">
                       <Play className="w-8 h-8 text-blue-600 ml-1" />
                     </button>
                   </div>
@@ -232,22 +229,6 @@ export function HorizontalCourseScroll() {
                     <p className="text-xs text-white/70 mt-2 font-medium">
                       {course.completedLessons} of {course.totalLessons} lessons completed
                     </p>
-                  </div>
-
-                  {/* Skills */}
-                  <div className="mb-6">
-                    <div className="flex flex-wrap gap-2">
-                      {course.skills.slice(0, 3).map((skill, idx) => (
-                        <span key={idx} className="px-3 py-1 bg-white/15 backdrop-blur-sm text-white/90 rounded-full text-xs font-medium border border-white/20">
-                          {skill}
-                        </span>
-                      ))}
-                      {course.skills.length > 3 && (
-                        <span className="px-3 py-1 bg-white/15 backdrop-blur-sm text-white/90 rounded-full text-xs font-medium border border-white/20">
-                          +{course.skills.length - 3} more
-                        </span>
-                      )}
-                    </div>
                   </div>
 
                   {/* Actions */}

@@ -142,10 +142,10 @@ export function MessagesPage() {
   };
 
   return (
-    <div className="h-[calc(100vh-8rem)] md:h-[calc(100vh-8rem)] flex overflow-hidden">
-      <GlassCard gradient="blue" className="flex w-full overflow-hidden">
-        {/* Mobile: Show conversations or chat based on state */}
-        <div className={`${showConversations ? 'block' : 'hidden'} sm:block w-full sm:w-80 border-r border-white/20 flex flex-col`}>
+    <div className="h-screen w-full flex overflow-hidden">
+      <GlassCard gradient="blue" className="flex w-full h-full overflow-hidden">
+        {/* Conversations List */}
+        <div className={`${showConversations ? 'block' : 'hidden'} lg:block w-full lg:w-80 xl:w-96 border-r border-white/20 flex flex-col`}>
           {/* Header */}
           <div className="p-4 sm:p-6 border-b border-white/20">
             <div className="flex items-center justify-between mb-4">
@@ -232,15 +232,15 @@ export function MessagesPage() {
           </div>
         </div>
 
-        {/* Chat Area - Only visible on small screens */}
-        <div className={`${showConversations ? 'hidden' : 'block'} sm:hidden flex-1 flex flex-col`}>
+        {/* Chat Area */}
+        <div className={`${showConversations ? 'hidden' : 'block'} lg:block flex-1 flex flex-col min-w-0`}>
           {/* Chat Header */}
           <div className="p-4 sm:p-6 border-b border-white/20">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <button
                   onClick={() => setShowConversations(true)}
-                  className="sm:hidden p-2 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/20 transition-colors border border-white/20"
+                  className="lg:hidden p-2 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/20 transition-colors border border-white/20"
                 >
                   <ArrowLeft className="w-4 h-4 text-white" />
                 </button>
@@ -294,7 +294,7 @@ export function MessagesPage() {
                 }`}
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className={`max-w-xs sm:max-w-md ${message.isOwn ? 'order-2' : 'order-1'}`}>
+                <div className={`max-w-xs sm:max-w-md lg:max-w-lg xl:max-w-xl ${message.isOwn ? 'order-2' : 'order-1'}`}>
                   <div className={`${message.isOwn ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white' : 'bg-white/10 backdrop-blur-sm border border-white/20'} rounded-2xl px-3 py-2 sm:px-4 sm:py-3 shadow-lg`}>
                     <p className={`text-sm sm:text-base ${message.isOwn ? 'text-white' : 'text-white/90'}`}>
                       {message.content}

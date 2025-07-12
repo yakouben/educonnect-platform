@@ -84,7 +84,7 @@ const adminPosts = [
 
 export function MobileSocialFeed() {
   const [visiblePosts, setVisiblePosts] = useState(2);
-  const [postStates, setPostStates] = useState(
+  const [postStates, setPostStates] = useState<{ [key: number]: { isLiked: boolean; likes: number } }>(
     adminPosts.reduce((acc, post) => ({
       ...acc,
       [post.id]: { isLiked: post.isLiked, likes: post.likes }
@@ -96,8 +96,8 @@ export function MobileSocialFeed() {
     setPostStates(prev => ({
       ...prev,
       [postId]: {
-        isLiked: !prev[postId].isLiked,
-        likes: prev[postId].isLiked ? prev[postId].likes - 1 : prev[postId].likes + 1
+        isLiked: !prev[postId]?.isLiked,
+        likes: prev[postId]?.isLiked ? prev[postId].likes - 1 : prev[postId].likes + 1
       }
     }));
   };
@@ -117,9 +117,6 @@ export function MobileSocialFeed() {
           <div className="flex items-center justify-between mb-4 sm:mb-6">
             <h2 className="text-lg sm:text-xl font-bold text-white flex items-center space-x-3">
               <span>Community Feed</span>
-              <div className="w-8 h-8 bg-gradient-to-br from-white/20 to-white/10 rounded-xl flex items-center justify-center shadow-lg backdrop-blur-sm animate-glow">
-                <MessageCircle className="w-4 h-4 text-white" />
-              </div>
             </h2>
             <button className="text-white/80 hover:text-white font-medium text-sm transition-colors touch-manipulation">
               See all
