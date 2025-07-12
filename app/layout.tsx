@@ -6,7 +6,7 @@ import { ThemeProvider } from '@/lib/theme-context';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'EduConnect - Learning Platform',
+  title: 'Joinly - Learning Platform',
   description: 'Modern learning platform with responsive design',
 };
 

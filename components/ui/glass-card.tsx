@@ -22,9 +22,11 @@ export function GlassCard({ children, className, hover = true, gradient = 'blue'
   return (
     <div 
       className={cn(
-        "relative backdrop-blur-xl bg-gradient-to-br border shadow-lg rounded-2xl transition-all duration-300",
+        "relative overflow-hidden",
+        "backdrop-blur-xl border border-white/20 shadow-2xl",
+        "transition-all duration-300 ease-out",
         gradientClasses[gradient],
-        hover && "hover:scale-105 hover:-translate-y-1 hover:shadow-2xl",
+        hover && "hover:-translate-y-1 hover:shadow-2xl",
         "dark:from-white/5 dark:to-white/2 dark:border-white/10",
         className
       )}

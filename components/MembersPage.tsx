@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import { Search, Filter, Users, MapPin, Calendar, MessageCircle, UserPlus, Star, Award, Grid, List, MoreHorizontal, Code, Palette, TrendingUp, Database, Smartphone, Zap } from 'lucide-react';
+import { GlassCard } from './ui/glass-card';
+import { EnhancedButton } from './ui/enhanced-button';
 
 const members = [
   {
     id: 1,
-    name: 'Sarah Johnson',
+    name: 'Sarah med',
     username: '@sarah_codes',
     avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150',
     role: 'Senior Developer',
@@ -132,279 +134,203 @@ const locations = ['All', 'San Francisco, CA', 'New York, NY', 'Austin, TX', 'Se
 export function MembersPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedRole, setSelectedRole] = useState('All');
-  const [selectedLocation, setSelectedLocation] = useState('All');
+  const [selectedSkill, setSelectedSkill] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
   const filteredMembers = members.filter(member => {
-    const matchesRole = selectedRole === 'All' || member.role === selectedRole;
-    const matchesLocation = selectedLocation === 'All' || member.location === selectedLocation;
+    const matchesRole = selectedRole === 'All' || member.role.includes(selectedRole);
+    const matchesSkill = selectedSkill === 'All' || member.skills.includes(selectedSkill);
     const matchesSearch = member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         member.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         member.company.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesOnline = !showOnlineOnly || member.isOnline;
-    return matchesRole && matchesLocation && matchesSearch && matchesOnline;
+                         member.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         member.username.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesRole && matchesSkill && matchesSearch;
   });
 
   return (
-    <div className="space-y-6 p-4 md:p-0">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-        <div>
-          <h1 className="text-xl md:text-2xl font-bold text-gray-900 flex items-center space-x-2">
-            <span>Community Members</span>
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+      <GlassCard gradient="blue" className="overflow-hidden">
+        <div className="p-4 sm:p-6 border-b border-white/10">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6">
+            <div className="flex items-center space-x-3 mb-4 sm:mb-0">
+              <h1 className="text-lg sm:text-xl font-bold text-white">Community Members</h1>
+              <div className="w-8 h-8 bg-gradient-to-br from-white/20 to-white/10 rounded-xl flex items-center justify-center shadow-lg backdrop-blur-sm animate-glow">
               <Users className="w-4 h-4 text-white" />
+              </div>
             </div>
-          </h1>
-          <p className="text-gray-600 mt-1 text-sm md:text-base">Connect with amazing people in our community</p>
-        </div>
-        
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
-          <button className="flex items-center justify-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg text-sm font-medium hover:from-purple-700 hover:to-indigo-700 transition-all duration-200 shadow-sm hover:shadow-md">
-            <UserPlus className="w-4 h-4" />
-            <span>Invite Members</span>
-          </button>
-          
-          <div className="flex items-center space-x-2 bg-white rounded-lg border border-gray-200 p-1">
+            <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-1">
             <button
               onClick={() => setViewMode('grid')}
-              className={`p-2 rounded-md transition-colors ${
-                viewMode === 'grid' ? 'bg-purple-100 text-purple-600' : 'text-gray-500 hover:text-gray-700'
+                  className={`p-2 rounded-lg transition-all ${
+                    viewMode === 'grid' ? 'bg-white/20 shadow-lg' : 'hover:bg-white/10'
               }`}
             >
-              <Grid className="w-4 h-4" />
+                  <Grid className="w-4 h-4 text-white" />
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`p-2 rounded-md transition-colors ${
-                viewMode === 'list' ? 'bg-purple-100 text-purple-600' : 'text-gray-500 hover:text-gray-700'
+                  className={`p-2 rounded-lg transition-all ${
+                    viewMode === 'list' ? 'bg-white/20 shadow-lg' : 'hover:bg-white/10'
               }`}
             >
-              <List className="w-4 h-4" />
+                  <List className="w-4 h-4 text-white" />
             </button>
           </div>
+              <EnhancedButton
+                variant="primary"
+                size="sm"
+                icon={<UserPlus className="w-4 h-4" />}
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg"
+              >
+                Invite Members
+              </EnhancedButton>
         </div>
       </div>
 
       {/* Search and Filters */}
-      <div className="bg-white rounded-2xl p-4 md:p-6 shadow-sm border border-gray-100">
-        <div className="flex flex-col lg:flex-row gap-4">
-          {/* Search */}
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60 w-4 h-4" />
             <input
               type="text"
-              placeholder="Search members, companies, skills..."
+                placeholder="Search members..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all text-sm md:text-base"
+                className="w-full pl-10 pr-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg focus:ring-2 focus:ring-white/30 focus:border-transparent outline-none text-white placeholder-white/60 text-sm sm:text-base"
             />
           </div>
-
-          {/* Filters */}
-          <div className="flex flex-col sm:flex-row flex-wrap gap-3">
+            <div className="flex space-x-2">
             <select
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
-              className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none bg-white text-sm md:text-base"
-            >
-              {roles.map(role => (
-                <option key={role} value={role}>{role}</option>
-              ))}
+                className="px-3 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg focus:ring-2 focus:ring-white/30 focus:border-transparent outline-none text-white text-sm sm:text-base"
+              >
+                <option value="All">All Roles</option>
+                <option value="Developer">Developer</option>
+                <option value="Designer">Designer</option>
+                <option value="Manager">Manager</option>
+                <option value="Analyst">Analyst</option>
             </select>
-            
             <select
-              value={selectedLocation}
-              onChange={(e) => setSelectedLocation(e.target.value)}
-              className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none bg-white text-sm md:text-base"
-            >
-              {locations.map(location => (
-                <option key={location} value={location}>{location}</option>
-              ))}
+                value={selectedSkill}
+                onChange={(e) => setSelectedSkill(e.target.value)}
+                className="px-3 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg focus:ring-2 focus:ring-white/30 focus:border-transparent outline-none text-white text-sm sm:text-base"
+              >
+                <option value="All">All Skills</option>
+                <option value="React">React</option>
+                <option value="TypeScript">TypeScript</option>
+                <option value="Figma">Figma</option>
+                <option value="Node.js">Node.js</option>
             </select>
-
-            <label className="flex items-center space-x-2 px-4 py-3 border border-gray-300 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
-              <input
-                type="checkbox"
-                checked={showOnlineOnly}
-                onChange={(e) => setShowOnlineOnly(e.target.checked)}
-                className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
-              />
-              <span className="text-sm text-gray-700">Online only</span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-        <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl p-4 md:p-6 text-white">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-white/20 rounded-xl flex items-center justify-center">
-              <Users className="w-5 h-5 md:w-6 md:h-6" />
-            </div>
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-              <Users className="w-4 h-4 text-white" />
             </div>
           </div>
-          <h3 className="text-xl md:text-2xl font-bold mb-1">{members.length}</h3>
-          <p className="text-purple-100 text-xs md:text-base">Total Members</p>
         </div>
+      </GlassCard>
 
-        <div className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-4 md:p-6 text-white">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-white/20 rounded-xl flex items-center justify-center">
-              <div className="w-3 h-3 bg-white rounded-full"></div>
-            </div>
-            <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
-              <div className="w-3 h-3 bg-white rounded-full"></div>
-            </div>
+      {/* Members Grid */}
+      <GlassCard gradient="blue" className="overflow-hidden">
+        <div className="p-4 sm:p-6 border-b border-white/10">
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
+            <h2 className="text-lg sm:text-xl font-bold text-white">Community Directory</h2>
+            <span className="text-xs sm:text-sm text-white/70">{filteredMembers.length} members found</span>
           </div>
-          <h3 className="text-xl md:text-2xl font-bold mb-1">{members.filter(m => m.isOnline).length}</h3>
-          <p className="text-emerald-100 text-xs md:text-base">Online Now</p>
         </div>
 
-        <div className="bg-gradient-to-r from-blue-500 to-cyan-600 rounded-2xl p-4 md:p-6 text-white">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-white/20 rounded-xl flex items-center justify-center">
-              <Star className="w-5 h-5 md:w-6 md:h-6" />
-            </div>
-            <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-xl flex items-center justify-center shadow-lg">
-              <Star className="w-4 h-4 text-white" />
-            </div>
-          </div>
-          <h3 className="text-xl md:text-2xl font-bold mb-1">{members.filter(m => m.isVerified).length}</h3>
-          <p className="text-blue-100 text-xs md:text-base">Verified Members</p>
-        </div>
-
-        <div className="bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl p-4 md:p-6 text-white">
-          <div className="flex items-center justify-between mb-4">
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-white/20 rounded-xl flex items-center justify-center">
-              <Calendar className="w-5 h-5 md:w-6 md:h-6" />
-            </div>
-            <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
-              <Calendar className="w-4 h-4 text-white" />
-            </div>
-          </div>
-          <h3 className="text-xl md:text-2xl font-bold mb-1">23</h3>
-          <p className="text-orange-100 text-xs md:text-base">New This Week</p>
-        </div>
-      </div>
-
-      {/* Members Grid/List */}
-      <div className="bg-white rounded-2xl p-4 md:p-6 shadow-sm border border-gray-100">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg md:text-xl font-bold text-gray-900">Community Directory</h2>
-          <span className="text-xs md:text-sm text-gray-500">{filteredMembers.length} members found</span>
-        </div>
-
+        <div className="p-4 sm:p-6">
         {viewMode === 'grid' ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {filteredMembers.map((member) => {
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {filteredMembers.map((member, index) => {
               const IconComponent = member.icon;
               return (
                 <div
                   key={member.id}
-                  className="group border border-gray-200 rounded-2xl p-4 md:p-6 hover:shadow-xl transition-all duration-300 hover:border-purple-300 relative"
+                    className="group border border-white/20 rounded-2xl p-4 sm:p-6 hover:shadow-xl transition-all duration-300 hover:border-white/40 relative backdrop-blur-sm bg-white/5 animate-scale-in"
+                    style={{ animationDelay: `${index * 100}ms` }}
                 >
                   {/* Online Status */}
                   {member.isOnline && (
-                    <div className="absolute top-4 right-4 w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                      <div className="absolute top-4 right-4 w-3 h-3 bg-green-400 rounded-full animate-pulse shadow-lg"></div>
                   )}
 
                   {/* Profile Header */}
-                  <div className="text-center mb-4">
-                    <div className="relative inline-block">
+                    <div className="flex items-center space-x-4 mb-4">
+                      <div className="relative">
                       <img
                         src={member.avatar}
                         alt={member.name}
-                        className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover mx-auto mb-3 ring-4 ring-white shadow-lg"
+                          className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover ring-2 ring-white/30 shadow-lg"
                       />
-                      <div className="absolute -top-1 -right-1">
-                        <div className="w-6 h-6 bg-gradient-to-br from-white/20 to-white/10 rounded-xl flex items-center justify-center shadow-lg backdrop-blur-sm border border-white/20">
-                          <IconComponent className="w-3 h-3 text-gray-600" />
+                        <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-gradient-to-br from-white/20 to-white/10 rounded-xl flex items-center justify-center shadow-lg backdrop-blur-sm border border-white/20">
+                          <IconComponent className="w-3 h-3 text-white" />
                         </div>
                       </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center space-x-2 mb-1">
+                          <h3 className="font-bold text-white text-sm sm:text-base truncate">{member.name}</h3>
                       {member.isVerified && (
-                        <div className="absolute -bottom-1 -right-1 w-5 h-5 md:w-6 md:h-6 bg-blue-500 rounded-full flex items-center justify-center">
-                          <span className="text-white text-xs">✓</span>
+                            <Award className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                          )}
                         </div>
-                      )}
-                    </div>
-                    
-                    <h3 className="font-bold text-gray-900 mb-1 text-sm md:text-base">{member.name}</h3>
-                    <p className="text-purple-600 text-xs md:text-sm mb-1">{member.username}</p>
-                    
-                    <div className="flex items-center justify-center space-x-2 mb-2">
-                      <span className={`px-2 py-1 ${member.badgeColor} text-white text-xs font-medium rounded-full`}>
+                        <p className="text-white/80 text-xs sm:text-sm truncate">{member.username}</p>
+                        <span className={`inline-block px-2 py-1 ${member.badgeColor} text-white text-xs font-medium rounded-full mt-1`}>
                         {member.badge}
                       </span>
                     </div>
                   </div>
 
-                  {/* Member Info */}
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center text-xs md:text-sm text-gray-600 justify-center">
-                      <span className="font-medium">{member.role}</span>
+                    {/* Role and Company */}
+                    <div className="mb-4">
+                      <p className="font-semibold text-white text-sm sm:text-base mb-1">{member.role}</p>
+                      <p className="text-white/70 text-xs sm:text-sm">{member.company}</p>
                     </div>
-                    <div className="flex items-center text-xs md:text-sm text-gray-600 justify-center">
-                      <span>{member.company}</span>
+
+                    {/* Bio/Description */}
+                    <div className="mb-4">
+                      <p className="text-white/80 text-xs sm:text-sm leading-relaxed">{member.bio}</p>
                     </div>
-                    <div className="flex items-center justify-center space-x-1 text-xs md:text-sm text-gray-500">
+
+                    {/* Location and Join Date */}
+                    <div className="flex items-center space-x-4 text-xs sm:text-sm text-white/60 mb-4">
+                      <div className="flex items-center space-x-1">
                       <MapPin className="w-3 h-3" />
                       <span>{member.location}</span>
                     </div>
-                    <div className="flex items-center justify-center space-x-1 text-xs md:text-sm text-gray-500">
+                      <div className="flex items-center space-x-1">
                       <Calendar className="w-3 h-3" />
-                      <span>Joined {member.joinDate}</span>
+                        <span>{member.joinDate}</span>
+                      </div>
                     </div>
-                  </div>
-
-                  {/* Bio */}
-                  <p className="text-xs md:text-sm text-gray-600 mb-4 line-clamp-3 text-center">{member.bio}</p>
 
                   {/* Skills */}
-                  <div className="flex flex-wrap gap-1 mb-4 justify-center">
-                    {member.skills.slice(0, 3).map((skill, index) => (
-                      <span
-                        key={index}
-                        className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
-                      >
+                    <div className="mb-4">
+                      <div className="flex flex-wrap gap-1 sm:gap-2">
+                        {member.skills.slice(0, 3).map((skill, idx) => (
+                          <span key={idx} className="px-2 py-1 bg-white/15 text-white/80 rounded-full text-xs border border-white/20">
                         {skill}
                       </span>
                     ))}
                     {member.skills.length > 3 && (
-                      <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">
+                          <span className="px-2 py-1 bg-white/15 text-white/80 rounded-full text-xs border border-white/20">
                         +{member.skills.length - 3}
                       </span>
                     )}
                   </div>
-
-                  {/* Stats */}
-                  <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
-                    <div className="text-center">
-                      <div className="font-medium text-gray-900">{member.followers}</div>
-                      <div>Followers</div>
                     </div>
-                    <div className="text-center">
-                      <div className="font-medium text-gray-900">{member.following}</div>
-                      <div>Following</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="font-medium text-gray-900">{member.posts}</div>
-                      <div>Posts</div>
-                    </div>
-                  </div>
 
                   {/* Actions */}
                   <div className="flex space-x-2">
-                    <button className="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-2 rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all text-xs md:text-sm font-medium flex items-center justify-center space-x-1">
-                      <span>Connect</span>
-                      <UserPlus className="w-3 h-3" />
-                    </button>
-                    <button className="px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-                      <MessageCircle className="w-4 h-4" />
+                      <EnhancedButton
+                        variant="primary"
+                        size="sm"
+                        fullWidth
+                        icon={<MessageCircle className="w-4 h-4" />}
+                        className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg"
+                      >
+                        Message
+                      </EnhancedButton>
+                      <button className="p-2 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/20 transition-colors border border-white/20">
+                        <MoreHorizontal className="w-4 h-4 text-white" />
                     </button>
                   </div>
                 </div>
@@ -413,88 +339,74 @@ export function MembersPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            {filteredMembers.map((member) => {
+              {filteredMembers.map((member, index) => {
               const IconComponent = member.icon;
               return (
                 <div
                   key={member.id}
-                  className="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-6 p-4 md:p-6 border border-gray-200 rounded-2xl hover:border-purple-300 hover:shadow-lg transition-all duration-300"
+                    className="flex items-center space-x-4 p-4 sm:p-6 border border-white/20 rounded-2xl hover:border-white/40 hover:shadow-lg transition-all duration-300 backdrop-blur-sm bg-white/5 animate-slide-up"
+                    style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  <div className="relative flex-shrink-0 mx-auto md:mx-0">
+                    {/* Profile */}
+                    <div className="relative flex-shrink-0">
                     <img
                       src={member.avatar}
                       alt={member.name}
-                      className="w-12 h-12 md:w-16 md:h-16 rounded-full object-cover"
+                        className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover ring-2 ring-white/30 shadow-lg"
                     />
-                    <div className="absolute -top-1 -right-1">
-                      <div className="w-5 h-5 bg-gradient-to-br from-white/20 to-white/10 rounded-lg flex items-center justify-center shadow-lg backdrop-blur-sm border border-white/20">
-                        <IconComponent className="w-3 h-3 text-gray-600" />
+                      <div className="absolute -bottom-2 -right-2 w-5 h-5 bg-gradient-to-br from-white/20 to-white/10 rounded-lg flex items-center justify-center shadow-lg backdrop-blur-sm border border-white/20">
+                        <IconComponent className="w-3 h-3 text-white" />
                       </div>
-                    </div>
-                    {member.isOnline && (
-                      <div className="absolute -bottom-1 -right-1 w-3 h-3 md:w-4 md:h-4 bg-green-500 rounded-full border-2 border-white"></div>
-                    )}
+                      {member.isOnline && (
+                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-pulse shadow-lg"></div>
+                      )}
                   </div>
 
-                  <div className="flex-1 min-w-0 text-center md:text-left">
-                    <div className="flex flex-wrap items-center justify-center md:justify-start space-x-2 mb-1">
-                      <h3 className="font-bold text-gray-900 text-sm md:text-base">{member.name}</h3>
-                      {member.isVerified && (
-                        <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
-                          <span className="text-white text-xs">✓</span>
-                        </div>
-                      )}
-                      <span className={`px-2 py-1 ${member.badgeColor} text-white text-xs font-medium rounded-full`}>
-                        {member.badge}
-                      </span>
-                    </div>
-                    
-                    <p className="text-purple-600 text-xs md:text-sm mb-1">{member.username}</p>
-                    <p className="text-gray-600 text-xs md:text-sm mb-2">{member.role} at {member.company}</p>
-                    
-                    <div className="flex flex-wrap items-center justify-center md:justify-start space-x-4 text-xs text-gray-500 mb-2">
-                      <div className="flex items-center space-x-1">
-                        <MapPin className="w-3 h-3" />
-                        <span>{member.location}</span>
+                    {/* Info */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center space-x-2 mb-1">
+                        <h3 className="font-bold text-white text-sm sm:text-base">{member.name}</h3>
+                        {member.isVerified && (
+                          <Award className="w-4 h-4 text-blue-400" />
+                        )}
+                        <span className={`px-2 py-1 ${member.badgeColor} text-white text-xs font-medium rounded-full`}>
+                          {member.badge}
+                        </span>
                       </div>
-                      <div className="flex items-center space-x-1">
+                      <p className="text-white/80 text-xs sm:text-sm mb-2">{member.username} • {member.role}</p>
+                      <p className="text-white/70 text-xs sm:text-sm mb-2">{member.company}</p>
+                      
+                      {/* Bio/Description */}
+                      <p className="text-white/80 text-xs sm:text-sm mb-3 leading-relaxed">{member.bio}</p>
+                      
+                      {/* Join Date */}
+                      <div className="flex items-center space-x-1 text-xs sm:text-sm text-white/60 mb-2">
                         <Calendar className="w-3 h-3" />
                         <span>Joined {member.joinDate}</span>
                       </div>
-                    </div>
-
-                    <div className="flex flex-wrap gap-1 justify-center md:justify-start">
-                      {member.skills.slice(0, 4).map((skill, index) => (
-                        <span
-                          key={index}
-                          className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex-shrink-0 text-center">
-                    <div className="flex items-center justify-center space-x-6 text-xs text-gray-500 mb-3">
-                      <div className="text-center">
-                        <div className="font-medium text-gray-900">{member.followers}</div>
-                        <div>Followers</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="font-medium text-gray-900">{member.posts}</div>
-                        <div>Posts</div>
+                      
+                      <div className="flex flex-wrap gap-1 sm:gap-2">
+                        {member.skills.slice(0, 4).map((skill, idx) => (
+                          <span key={idx} className="px-2 py-1 bg-white/15 text-white/80 rounded-full text-xs border border-white/20">
+                            {skill}
+                          </span>
+                        ))}
                       </div>
                     </div>
                     
-                    <div className="flex space-x-2 justify-center">
-                      <button className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all text-xs md:text-sm font-medium">
-                        Connect
+                    {/* Actions */}
+                    <div className="flex items-center space-x-2">
+                      <EnhancedButton
+                        variant="primary"
+                        size="sm"
+                        icon={<MessageCircle className="w-4 h-4" />}
+                        className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg"
+                      >
+                        Message
+                      </EnhancedButton>
+                      <button className="p-2 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/20 transition-colors border border-white/20">
+                        <MoreHorizontal className="w-4 h-4 text-white" />
                       </button>
-                      <button className="px-3 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
-                        <MessageCircle className="w-4 h-4" />
-                      </button>
-                    </div>
                   </div>
                 </div>
               );
@@ -502,6 +414,7 @@ export function MembersPage() {
           </div>
         )}
       </div>
+      </GlassCard>
     </div>
   );
 }

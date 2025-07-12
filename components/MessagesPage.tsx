@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import { Search, Plus, Phone, Video, MoreHorizontal, Send, Paperclip, Smile, Image, Mic, ArrowLeft, MessageCircle, Code, Palette, TrendingUp, Database, Smartphone, Zap } from 'lucide-react';
+import { GlassCard } from './ui/glass-card';
+import { EnhancedButton } from './ui/enhanced-button';
 
 const conversations = [
   {
     id: 1,
-    name: 'Sarah Johnson',
+    name: 'Sarah med',
     username: '@sarah_codes',
     avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150',
     lastMessage: 'Hey! I saw your latest project, it looks amazing!',
@@ -72,7 +74,7 @@ const messages = [
   {
     id: 1,
     senderId: 1,
-    senderName: 'Sarah Johnson',
+    senderName: 'Sarah med',
     senderAvatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150',
     content: 'Hey! I saw your latest project on the community feed. The UI design is absolutely stunning!',
     timestamp: '10:30 AM',
@@ -90,7 +92,7 @@ const messages = [
   {
     id: 3,
     senderId: 1,
-    senderName: 'Sarah Johnson',
+    senderName: 'Sarah med',
     senderAvatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150',
     content: 'The attention to detail really shows! Are you using Framer Motion for the animations?',
     timestamp: '10:33 AM',
@@ -108,7 +110,7 @@ const messages = [
   {
     id: 5,
     senderId: 1,
-    senderName: 'Sarah Johnson',
+    senderName: 'Sarah med',
     senderAvatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150',
     content: 'Would love to collaborate on a project sometime! I think our skills would complement each other well',
     timestamp: '10:36 AM',
@@ -140,231 +142,219 @@ export function MessagesPage() {
   };
 
   return (
-    <div className="h-[calc(100vh-8rem)] md:h-[calc(100vh-8rem)] flex bg-white rounded-none md:rounded-2xl shadow-none md:shadow-sm border-0 md:border border-gray-100 overflow-hidden">
-      {/* Mobile: Show conversations or chat based on state */}
-      <div className={`${showConversations ? 'block' : 'hidden'} md:block w-full md:w-80 border-r border-gray-200 flex flex-col`}>
-        {/* Header */}
-        <div className="p-4 md:p-6 border-b border-gray-200">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-lg md:text-xl font-bold text-gray-900 flex items-center space-x-2">
-              <span>Messages</span>
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                <MessageCircle className="w-4 h-4 text-white" />
-              </div>
-            </h1>
-            <button className="p-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all">
-              <Plus className="w-4 h-4" />
-            </button>
-          </div>
-          
-          {/* Search */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <input
-              type="text"
-              placeholder="Search conversations..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all text-sm"
-            />
-          </div>
-        </div>
-
-        {/* Conversations List */}
-        <div className="flex-1 overflow-y-auto">
-          {filteredConversations.map((conversation) => {
-            const IconComponent = conversation.icon;
-            return (
-              <div
-                key={conversation.id}
-                onClick={() => handleConversationSelect(conversation)}
-                className={`flex items-center space-x-3 p-3 md:p-4 cursor-pointer transition-colors ${
-                  selectedConversation.id === conversation.id
-                    ? 'bg-gradient-to-r from-purple-50 to-indigo-50 border-r-2 border-purple-500'
-                    : 'hover:bg-gray-50'
-                }`}
+    <div className="h-[calc(100vh-8rem)] md:h-[calc(100vh-8rem)] flex overflow-hidden">
+      <GlassCard gradient="blue" className="flex w-full overflow-hidden">
+        {/* Mobile: Show conversations or chat based on state */}
+        <div className={`${showConversations ? 'block' : 'hidden'} sm:block w-full sm:w-80 border-r border-white/20 flex flex-col`}>
+          {/* Header */}
+          <div className="p-4 sm:p-6 border-b border-white/20">
+            <div className="flex items-center justify-between mb-4">
+              <h1 className="text-lg sm:text-xl font-bold text-white flex items-center space-x-2">
+                <span>Messages</span>
+                <div className="w-8 h-8 bg-gradient-to-br from-white/20 to-white/10 rounded-xl flex items-center justify-center shadow-lg backdrop-blur-sm">
+                  <MessageCircle className="w-4 h-4 text-white" />
+                </div>
+              </h1>
+              <EnhancedButton
+                variant="primary"
+                size="sm"
+                icon={<Plus className="w-4 h-4" />}
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg"
               >
-                <div className="relative flex-shrink-0">
-                  <img
-                    src={conversation.avatar}
-                    alt={conversation.name}
-                    className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover"
-                  />
-                  <div className="absolute -top-1 -right-1">
-                    <div className="w-5 h-5 bg-gradient-to-br from-white/20 to-white/10 rounded-lg flex items-center justify-center shadow-lg backdrop-blur-sm border border-white/20">
-                      <IconComponent className="w-3 h-3 text-gray-600" />
-                    </div>
-                  </div>
-                  {conversation.isOnline && (
-                    <div className="absolute -bottom-1 -right-1 w-3 h-3 md:w-4 md:h-4 bg-green-500 rounded-full border-2 border-white"></div>
-                  )}
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-1">
-                    <h3 className="font-semibold text-gray-900 text-sm md:text-sm truncate">
-                      {conversation.name}
-                    </h3>
-                    <span className="text-xs text-gray-500">{conversation.timestamp}</span>
-                  </div>
-                  
-                  <p className="text-gray-600 text-xs mb-1">{conversation.username}</p>
-                  
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm text-gray-600 truncate flex-1">
-                      {conversation.isTyping ? (
-                        <span className="text-purple-600 italic flex items-center space-x-1">
-                          <span>Typing...</span>
-                          <Zap className="w-3 h-3" />
-                        </span>
-                      ) : (
-                        conversation.lastMessage
-                      )}
-                    </p>
-                    {conversation.unread > 0 && (
-                      <span className="ml-2 bg-purple-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                        {conversation.unread}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Chat Area */}
-      <div className={`${showConversations ? 'hidden' : 'block'} md:block flex-1 flex flex-col`}>
-        {/* Chat Header */}
-        <div className="p-4 md:p-6 border-b border-gray-200 bg-white">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              {/* Mobile back button */}
-              <button
-                onClick={() => setShowConversations(true)}
-                className="md:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5 text-gray-600" />
-              </button>
-              
-              <div className="relative">
-                <img
-                  src={selectedConversation.avatar}
-                  alt={selectedConversation.name}
-                  className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover"
-                />
-                <div className="absolute -top-1 -right-1">
-                  <div className="w-4 h-4 bg-gradient-to-br from-white/20 to-white/10 rounded-lg flex items-center justify-center shadow-lg backdrop-blur-sm border border-white/20">
-                    {selectedConversation.icon && (
-                      <selectedConversation.icon className="w-2 h-2 text-gray-600" />
-                    )}
-                  </div>
-                </div>
-                {selectedConversation.isOnline && (
-                  <div className="absolute -bottom-1 -right-1 w-2 h-2 md:w-3 md:h-3 bg-green-500 rounded-full border-2 border-white"></div>
-                )}
-              </div>
-              <div>
-                <h2 className="font-semibold text-gray-900 text-sm md:text-base">{selectedConversation.name}</h2>
-                <p className="text-xs md:text-sm text-gray-500">
-                  {selectedConversation.isOnline ? (
-                    <span className="text-green-600 flex items-center space-x-1">
-                      <span>Online</span>
-                      <Zap className="w-3 h-3" />
-                    </span>
-                  ) : (
-                    selectedConversation.username
-                  )}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                <Phone className="w-4 h-4 md:w-5 md:h-5" />
-              </button>
-              <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                <Video className="w-4 h-4 md:w-5 md:h-5" />
-              </button>
-              <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                <MoreHorizontal className="w-4 h-4 md:w-5 md:h-5" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 bg-gradient-to-b from-gray-50 to-white">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex ${message.isOwn ? 'justify-end' : 'justify-start'}`}
-            >
-              <div className={`flex space-x-2 md:space-x-3 max-w-xs lg:max-w-md ${message.isOwn ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                {!message.isOwn && (
-                  <img
-                    src={message.senderAvatar}
-                    alt={message.senderName}
-                    className="w-6 h-6 md:w-8 md:h-8 rounded-full object-cover flex-shrink-0"
-                  />
-                )}
-                
-                <div className={`${message.isOwn ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white' : 'bg-white border border-gray-200'} rounded-2xl px-3 py-2 md:px-4 md:py-3 shadow-sm`}>
-                  <p className={`text-sm ${message.isOwn ? 'text-white' : 'text-gray-900'}`}>
-                    {message.content}
-                  </p>
-                  <p className={`text-xs mt-1 ${message.isOwn ? 'text-purple-100' : 'text-gray-500'}`}>
-                    {message.timestamp}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Message Input */}
-        <div className="p-4 md:p-6 border-t border-gray-200 bg-white">
-          <div className="flex items-center space-x-2 md:space-x-3">
-            <div className="flex items-center space-x-2">
-              <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                <Paperclip className="w-4 h-4 md:w-5 md:h-5" />
-              </button>
-              <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                <Image className="w-4 h-4 md:w-5 md:h-5" />
-              </button>
+                New
+              </EnhancedButton>
             </div>
             
-            <div className="flex-1 relative">
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60 w-4 h-4" />
               <input
                 type="text"
-                placeholder="Type your message..."
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                className="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all text-sm md:text-base"
+                placeholder="Search conversations..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-4 py-2 sm:py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg focus:ring-2 focus:ring-white/30 focus:border-transparent outline-none text-white placeholder-white/60 text-sm"
               />
-              <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors">
-                <Smile className="w-4 h-4 md:w-5 md:h-5" />
-              </button>
             </div>
+          </div>
 
-            <div className="flex items-center space-x-2">
-              <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-                <Mic className="w-4 h-4 md:w-5 md:h-5" />
-              </button>
-              <button
-                onClick={handleSendMessage}
-                disabled={!newMessage.trim()}
-                className="px-3 py-2 md:px-4 md:py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 text-sm md:text-base"
+          {/* Conversations List */}
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-2">
+            {filteredConversations.map((conversation, index) => {
+              const IconComponent = conversation.icon;
+              return (
+                <div
+                  key={conversation.id}
+                  onClick={() => handleConversationSelect(conversation)}
+                  className={`flex items-center space-x-3 p-3 sm:p-4 rounded-xl cursor-pointer transition-all duration-200 group hover:bg-white/10 animate-slide-up ${
+                    selectedConversation?.id === conversation.id ? 'bg-white/20 shadow-lg' : ''
+                  }`}
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  <div className="relative flex-shrink-0">
+                    <img
+                      src={conversation.avatar}
+                      alt={conversation.name}
+                      className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover ring-2 ring-white/30 shadow-lg"
+                    />
+                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-gradient-to-br from-white/20 to-white/10 rounded-lg flex items-center justify-center shadow-lg backdrop-blur-sm border border-white/20">
+                      <IconComponent className="w-3 h-3 text-white" />
+                    </div>
+                    {conversation.isOnline && (
+                      <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full animate-pulse shadow-lg"></div>
+                    )}
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <h3 className="font-semibold text-white text-sm sm:text-base truncate">{conversation.name}</h3>
+                      <span className="text-xs text-white/60 flex-shrink-0">{conversation.timestamp}</span>
+                    </div>
+                    <p className="text-white/80 text-xs sm:text-sm mb-1 truncate">{conversation.username}</p>
+                    <div className="flex items-center justify-between">
+                      <p className="text-white/60 text-xs truncate flex-1 mr-2">
+                        {conversation.isTyping ? (
+                          <span className="text-green-400">Typing...</span>
+                        ) : (
+                          conversation.lastMessage
+                        )}
+                      </p>
+                      {conversation.unread > 0 && (
+                        <div className="w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center shadow-lg">
+                          {conversation.unread}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Chat Area - Only visible on small screens */}
+        <div className={`${showConversations ? 'hidden' : 'block'} sm:hidden flex-1 flex flex-col`}>
+          {/* Chat Header */}
+          <div className="p-4 sm:p-6 border-b border-white/20">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={() => setShowConversations(true)}
+                  className="sm:hidden p-2 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/20 transition-colors border border-white/20"
+                >
+                  <ArrowLeft className="w-4 h-4 text-white" />
+                </button>
+                <div className="relative">
+                  <img
+                    src={selectedConversation?.avatar}
+                    alt={selectedConversation?.name}
+                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover ring-2 ring-white/30 shadow-lg"
+                  />
+                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-gradient-to-br from-white/20 to-white/10 rounded-lg flex items-center justify-center shadow-lg backdrop-blur-sm border border-white/20">
+                    <selectedConversation.icon className="w-2 h-2 text-white" />
+                  </div>
+                  {selectedConversation?.isOnline && (
+                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse shadow-lg"></div>
+                  )}
+                </div>
+                <div>
+                  <h3 className="font-semibold text-white text-sm sm:text-base">{selectedConversation?.name}</h3>
+                  <p className="text-white/70 text-xs sm:text-sm">
+                    {selectedConversation?.isTyping ? (
+                      <span className="text-green-400">Typing...</span>
+                    ) : selectedConversation?.isOnline ? (
+                      'Online'
+                    ) : (
+                      'Offline'
+                    )}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                <button className="p-2 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/20 transition-colors border border-white/20">
+                  <Phone className="w-4 h-4 text-white" />
+                </button>
+                <button className="p-2 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/20 transition-colors border border-white/20">
+                  <Video className="w-4 h-4 text-white" />
+                </button>
+                <button className="p-2 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/20 transition-colors border border-white/20">
+                  <MoreHorizontal className="w-4 h-4 text-white" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+            {messages.map((message, index) => (
+              <div
+                key={message.id}
+                className={`flex animate-slide-up ${
+                  message.isOwn ? 'justify-end' : 'justify-start'
+                }`}
+                style={{ animationDelay: `${index * 100}ms` }}
               >
-                <Send className="w-3 h-3 md:w-4 md:h-4" />
-                <span className="hidden md:inline">Send</span>
+                <div className={`max-w-xs sm:max-w-md ${message.isOwn ? 'order-2' : 'order-1'}`}>
+                  <div className={`${message.isOwn ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white' : 'bg-white/10 backdrop-blur-sm border border-white/20'} rounded-2xl px-3 py-2 sm:px-4 sm:py-3 shadow-lg`}>
+                    <p className={`text-sm sm:text-base ${message.isOwn ? 'text-white' : 'text-white/90'}`}>
+                      {message.content}
+                    </p>
+                  </div>
+                  <div className={`text-xs text-white/60 mt-1 ${message.isOwn ? 'text-right' : 'text-left'}`}>
+                    {message.timestamp}
+                  </div>
+                </div>
+                {!message.isOwn && (
+                  <div className="order-1 mr-2 sm:mr-3">
+                    <img
+                      src={message.senderAvatar}
+                      alt={message.senderName}
+                      className="w-8 h-8 rounded-full object-cover ring-1 ring-white/30"
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Message Input */}
+          <div className="p-4 sm:p-6 border-t border-white/20">
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <button className="p-2 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/20 transition-colors border border-white/20">
+                <Paperclip className="w-4 h-4 text-white" />
               </button>
+              <button className="p-2 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/20 transition-colors border border-white/20">
+                <Image className="w-4 h-4 text-white" />
+              </button>
+              <div className="flex-1 relative">
+                <input
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                  placeholder="Type a message..."
+                  className="w-full px-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl focus:ring-2 focus:ring-white/30 focus:border-transparent outline-none text-white placeholder-white/60 text-sm sm:text-base"
+                />
+                <button className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/20 transition-colors">
+                  <Smile className="w-4 h-4 text-white" />
+                </button>
+              </div>
+              <button className="p-2 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/20 transition-colors border border-white/20">
+                <Mic className="w-4 h-4 text-white" />
+              </button>
+              <EnhancedButton
+                onClick={handleSendMessage}
+                variant="primary"
+                size="sm"
+                icon={<Send className="w-4 h-4" />}
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg"
+              >
+                Send
+              </EnhancedButton>
             </div>
           </div>
         </div>
-      </div>
+      </GlassCard>
     </div>
   );
 }

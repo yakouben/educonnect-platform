@@ -23,11 +23,11 @@ export default function Dashboard() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-      success('Welcome back!', 'Your dashboard is ready.');
+      // Removed automatic success toast that was causing duplicates
     }, 1500);
 
     return () => clearTimeout(timer);
-  }, [success]);
+  }, []);
 
   // Handle section changes with smooth transitions
   const handleSectionChange = (section: string) => {
@@ -146,13 +146,6 @@ export default function Dashboard() {
 
       {/* Toast Notifications */}
       <ToastContainer toasts={toasts} onClose={removeToast} />
-
-      {/* Global keyboard shortcuts */}
-      {typeof window !== 'undefined' && (
-        <div className="hidden">
-          {/* Add keyboard shortcut handler here */}
-        </div>
-      )}
     </div>
   );
 }

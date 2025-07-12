@@ -12,7 +12,7 @@ export function MobileHeader() {
             <span className="text-white font-bold text-sm">T</span>
           </div>
           <div>
-            <h1 className="font-bold text-gray-900 text-lg">EduConnect</h1>
+            <h1 className="font-bold text-gray-900 text-lg">Joinly</h1>
           </div>
         </div>
         

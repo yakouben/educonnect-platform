@@ -147,7 +147,7 @@ export function MobileCourseCards() {
             {courses.map((course) => (
               <div
                 key={course.id}
-                className={`relative w-80 ${course.bgPattern} ${course.color} rounded-3xl p-6 text-white shadow-xl transform hover:scale-105 transition-all duration-300 flex-shrink-0`}
+                className={`relative w-80 ${course.bgPattern} ${course.color} rounded-3xl p-6 text-white shadow-xl transform transition-all duration-300 flex-shrink-0`}
                 style={{
                   boxShadow: '0 20px 40px rgba(0,0,0,0.1), 0 0 0 1px rgba(255,255,255,0.1)',
                 }}
@@ -233,7 +233,7 @@ export function MobileCourseCards() {
                 {/* Action Button */}
                 <button className="relative z-10 w-full bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white py-3 rounded-xl transition-all duration-300 font-medium flex items-center justify-center space-x-2 border border-white/30 hover:border-white/50">
                   <Play className="w-4 h-4" />
-                  <span>Continue Learning</span>
+                  <span classN>Continue Learning</span>
                   <span className="text-lg">✨</span>
                 </button>
               </div>

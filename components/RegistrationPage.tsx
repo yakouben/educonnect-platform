@@ -7,7 +7,7 @@ const upcomingEvents = [
   {
     id: 1,
     title: 'Advanced React Workshop',
-    instructor: 'Sarah Johnson',
+    instructor: 'Sarah med',
     instructorAvatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150',
     date: 'September 15, 2023',
     time: '2:00 PM - 5:00 PM PST',

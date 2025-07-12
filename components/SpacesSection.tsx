@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Plus, Users, Lock, Eye, Globe, MoreHorizontal, Hash, Home, Lightbulb, Rocket } from 'lucide-react';
+import { GlassCard } from './ui/glass-card';
 
 interface Space {
   id: string;
@@ -100,106 +101,123 @@ export function SpacesSection() {
     'bg-teal-500',
   ];
 
+  const handleCreateSpace = () => {
+    // Handle space creation here
+    setShowCreateModal(false);
+    setNewSpace({ name: '', description: '', type: 'open', color: 'bg-blue-500' });
+  };
+
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-2">
-          <h2 className="text-xl font-bold text-gray-900">Community Spaces</h2>
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-            <Home className="w-4 h-4 text-white" />
+    <div className="relative">
+      <GlassCard gradient="blue" className="overflow-hidden">
+        <div className="p-4 sm:p-6 border-b border-white/10">
+          <div className="flex items-center justify-between mb-4 sm:mb-6">
+            <div className="flex items-center space-x-3">
+              <h2 className="text-lg sm:text-xl font-bold text-white">Community Spaces</h2>
+              <div className="w-8 h-8 bg-gradient-to-br from-white/20 to-white/10 rounded-xl flex items-center justify-center shadow-lg backdrop-blur-sm animate-glow">
+                <Home className="w-4 h-4 text-white" />
+              </div>
+            </div>
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl text-sm font-medium hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl backdrop-blur-sm border border-white/20 touch-manipulation"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Create Space</span>
+            </button>
           </div>
         </div>
-        <button
-          onClick={() => setShowCreateModal(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg text-sm font-medium hover:from-purple-700 hover:to-indigo-700 transition-all duration-200 shadow-sm hover:shadow-md"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Create Space</span>
-        </button>
-      </div>
 
-      {/* Spaces List */}
-      <div className="space-y-3">
-        {spaces.map((space) => (
-          <div
-            key={space.id}
-            className={`group flex items-center space-x-4 p-4 rounded-xl border transition-all duration-200 cursor-pointer ${
-              space.isActive
-                ? 'bg-gradient-to-r from-purple-50 to-indigo-50 border-purple-200'
-                : 'border-gray-200 hover:border-purple-300 hover:bg-gray-50'
-            }`}
-          >
-            <div className="flex items-center space-x-3">
-              <div className={`w-3 h-3 rounded-full ${space.color}`} />
-              <Hash className="w-4 h-4 text-gray-400" />
-            </div>
-
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center space-x-2 mb-1">
-                <h4 className="font-semibold text-gray-900 text-sm">{space.name}</h4>
-                {getAccessIcon(space.type)}
-                {space.isActive && (
-                  <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-medium rounded-full flex items-center space-x-1">
-                    <span>Active</span>
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  </span>
-                )}
-              </div>
-              <p className="text-gray-600 text-xs mb-2">{space.description}</p>
-              <div className="flex items-center space-x-3 text-xs text-gray-500">
-                <div className="flex items-center space-x-1">
-                  <Users className="w-3 h-3" />
-                  <span>{space.memberCount} members</span>
+        {/* Spaces List */}
+        <div className="p-4 sm:p-6 space-y-3 sm:space-y-4">
+          {spaces.map((space, index) => (
+            <div
+              key={space.id}
+              className={`group flex items-center space-x-4 p-4 sm:p-5 rounded-xl border backdrop-blur-sm transition-all duration-200 cursor-pointer animate-slide-up ${
+                space.isActive
+                  ? 'bg-gradient-to-r from-white/20 to-white/10 border-white/30 shadow-lg'
+                  : 'border-white/20 hover:border-white/40 hover:bg-white/10'
+              }`}
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
+              <div className="flex items-center space-x-3">
+                <div className={`w-3 h-3 rounded-full ${space.color.replace('bg-', 'bg-gradient-to-br from-')} shadow-lg`} />
+                <div className="w-6 h-6 bg-white/15 backdrop-blur-sm rounded-lg flex items-center justify-center">
+                  <Hash className="w-3 h-3 text-white" />
                 </div>
-                <span>•</span>
-                <span>Last activity {space.lastActivity}</span>
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center space-x-2 mb-1 sm:mb-2">
+                  <h4 className="font-semibold text-white text-sm sm:text-base">{space.name}</h4>
+                  <div className="w-5 h-5 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
+                    {getAccessIcon(space.type)}
+                  </div>
+                  {space.isActive && (
+                    <span className="px-2 py-0.5 bg-green-500/20 text-green-300 text-xs font-medium rounded-full flex items-center space-x-1 border border-green-400/30">
+                      <span>Active</span>
+                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    </span>
+                  )}
+                </div>
+                <p className="text-white/70 text-xs sm:text-sm mb-2 line-clamp-2">{space.description}</p>
+                <div className="flex items-center space-x-3 text-xs text-white/60">
+                  <div className="flex items-center space-x-1">
+                    <Users className="w-3 h-3" />
+                    <span>{space.memberCount} members</span>
+                  </div>
+                  <span>•</span>
+                  <span>Last activity {space.lastActivity}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <button className="opacity-0 group-hover:opacity-100 p-2 hover:bg-white/20 rounded-lg transition-all backdrop-blur-sm">
+                  <MoreHorizontal className="w-4 h-4 text-white/70" />
+                </button>
               </div>
             </div>
+          ))}
+        </div>
 
-            <div className="flex items-center space-x-2">
-              <button className="opacity-0 group-hover:opacity-100 p-2 hover:bg-gray-100 rounded-lg transition-all">
-                <MoreHorizontal className="w-4 h-4 text-gray-500" />
+        {/* Quick Actions */}
+        <div className="p-4 sm:p-6 border-t border-white/10">
+          <div className="p-4 sm:p-5 bg-gradient-to-r from-white/10 to-white/5 rounded-xl border border-white/20 backdrop-blur-sm">
+            <div className="flex items-center space-x-2 mb-3 sm:mb-4">
+              <div className="w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center shadow-lg">
+                <Lightbulb className="w-3 h-3 text-white" />
+              </div>
+              <h3 className="font-semibold text-white text-sm sm:text-base">Space Ideas</h3>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+              <button className="text-left p-3 sm:p-4 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/20 transition-colors border border-white/20">
+                <div className="text-xs sm:text-sm font-medium text-white flex items-center space-x-2">
+                  <Users className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span>Study Groups</span>
+                </div>
+                <div className="text-xs text-white/70 mt-1">Collaborative learning</div>
+              </button>
+              <button className="text-left p-3 sm:p-4 bg-white/10 backdrop-blur-sm rounded-lg hover:bg-white/20 transition-colors border border-white/20">
+                <div className="text-xs sm:text-sm font-medium text-white flex items-center space-x-2">
+                  <Rocket className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span>Project Teams</span>
+                </div>
+                <div className="text-xs text-white/70 mt-1">Build together</div>
               </button>
             </div>
           </div>
-        ))}
-      </div>
-
-      {/* Quick Actions */}
-      <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 via-purple-50 to-indigo-50 rounded-xl border border-blue-200">
-        <div className="flex items-center space-x-2 mb-3">
-          <div className="w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center shadow-lg">
-            <Lightbulb className="w-3 h-3 text-white" />
-          </div>
-          <h3 className="font-semibold text-blue-900 text-sm">Space Ideas</h3>
         </div>
-        <div className="grid grid-cols-2 gap-2">
-          <button className="text-left p-2 bg-white/50 rounded-lg hover:bg-white/80 transition-colors">
-            <div className="text-xs font-medium text-blue-800 flex items-center space-x-1">
-              <Users className="w-3 h-3" />
-              <span>Study Groups</span>
-            </div>
-            <div className="text-xs text-blue-600">Collaborative learning</div>
-          </button>
-          <button className="text-left p-2 bg-white/50 rounded-lg hover:bg-white/80 transition-colors">
-            <div className="text-xs font-medium text-blue-800 flex items-center space-x-1">
-              <Rocket className="w-3 h-3" />
-              <span>Project Teams</span>
-            </div>
-            <div className="text-xs text-blue-600">Build together</div>
-          </button>
-        </div>
-      </div>
+      </GlassCard>
 
       {/* Create Space Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-gradient-to-b from-blue-900 via-blue-800 to-blue-900 backdrop-blur-xl rounded-2xl p-6 w-full max-w-md border border-white/20 shadow-2xl">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-bold text-gray-900">Create a Space</h3>
+              <h3 className="text-lg font-bold text-white">Create a Space</h3>
               <button
                 onClick={() => setShowCreateModal(false)}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-white/60 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg"
               >
                 ✕
               </button>
@@ -208,7 +226,7 @@ export function SpacesSection() {
             <div className="space-y-4">
               {/* Space Name */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-white/90 mb-2">
                   Space name
                 </label>
                 <div className="flex items-center space-x-2">
@@ -218,14 +236,14 @@ export function SpacesSection() {
                     value={newSpace.name}
                     onChange={(e) => setNewSpace({ ...newSpace, name: e.target.value })}
                     placeholder="Your space name"
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+                    className="flex-1 px-3 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg focus:ring-2 focus:ring-white/30 focus:border-transparent outline-none text-white placeholder-white/60"
                   />
                 </div>
               </div>
 
               {/* Color Selection */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-white/90 mb-2">
                   Space color
                 </label>
                 <div className="flex space-x-2">
@@ -234,8 +252,8 @@ export function SpacesSection() {
                       key={color}
                       onClick={() => setNewSpace({ ...newSpace, color })}
                       className={`w-6 h-6 rounded-full ${color} ${
-                        newSpace.color === color ? 'ring-2 ring-gray-400' : ''
-                      }`}
+                        newSpace.color === color ? 'ring-2 ring-white/40' : ''
+                      } shadow-lg`}
                     />
                   ))}
                 </div>
@@ -243,7 +261,7 @@ export function SpacesSection() {
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-white/90 mb-2">
                   Description
                 </label>
                 <textarea
@@ -251,13 +269,13 @@ export function SpacesSection() {
                   onChange={(e) => setNewSpace({ ...newSpace, description: e.target.value })}
                   placeholder="What's this space about?"
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none resize-none"
+                  className="w-full px-3 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg focus:ring-2 focus:ring-white/30 focus:border-transparent outline-none resize-none text-white placeholder-white/60"
                 />
               </div>
 
               {/* Access Level */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-white/90 mb-2">
                   Access
                 </label>
                 <div className="space-y-2">
@@ -265,16 +283,18 @@ export function SpacesSection() {
                     <button
                       key={type}
                       onClick={() => setNewSpace({ ...newSpace, type })}
-                      className={`w-full flex items-center space-x-3 p-3 rounded-lg border transition-colors ${
+                      className={`w-full flex items-center space-x-3 p-3 rounded-lg border transition-colors backdrop-blur-sm ${
                         newSpace.type === type
-                          ? 'border-purple-300 bg-purple-50'
-                          : 'border-gray-200 hover:border-gray-300'
+                          ? 'border-white/40 bg-white/20'
+                          : 'border-white/20 hover:border-white/30 hover:bg-white/10'
                       }`}
                     >
-                      {getAccessIcon(type)}
+                      <div className="w-5 h-5 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center">
+                        {getAccessIcon(type)}
+                      </div>
                       <div className="text-left">
-                        <div className="font-medium text-sm capitalize">{type}</div>
-                        <div className="text-xs text-gray-500">
+                        <div className="font-medium text-sm capitalize text-white">{type}</div>
+                        <div className="text-xs text-white/60">
                           {getAccessDescription(type)}
                         </div>
                       </div>
@@ -287,17 +307,13 @@ export function SpacesSection() {
               <div className="flex space-x-3 pt-4">
                 <button
                   onClick={() => setShowCreateModal(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex-1 px-4 py-2 bg-white/10 backdrop-blur-sm text-white/80 rounded-lg hover:bg-white/20 transition-colors border border-white/20"
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={() => {
-                    // Handle space creation here
-                    setShowCreateModal(false);
-                    setNewSpace({ name: '', description: '', type: 'open', color: 'bg-blue-500' });
-                  }}
-                  className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-all"
+                  onClick={handleCreateSpace}
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-lg"
                 >
                   Create Space
                 </button>

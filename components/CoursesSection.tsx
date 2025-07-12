@@ -61,7 +61,7 @@ export function CoursesSection() {
               <img
                 src={course.image}
                 alt={course.title}
-                className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
+                className="w-full h-40 object-cover transition-transform duration-300"
               />
               <div className={`absolute inset-0 bg-gradient-to-r ${course.color} opacity-80`} />
               <button className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors">

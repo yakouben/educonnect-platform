@@ -72,13 +72,43 @@ export function EnhancedButton({
       onClick={createRipple}
       disabled={disabled || loading}
       className={cn(
-        'relative overflow-hidden font-medium transition-all duration-200 transform active:scale-95',
-        'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
-        'disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none',
-        variants[variant],
-        sizes[size],
+        // Base styles
+        'relative overflow-hidden font-medium transition-all duration-200 transform',
+        'inline-flex items-center justify-center',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30',
+        'disabled:pointer-events-none disabled:opacity-50',
+        
+        // Hover effects
+        
+        // Size variants
+        size === 'sm' && 'h-8 px-3 text-sm',
+        size === 'md' && 'h-10 px-4 text-sm',
+        size === 'lg' && 'h-12 px-6 text-base',
+        
+        // Width variants
         fullWidth && 'w-full',
-        'hover:scale-105',
+        
+        // Variant styles
+        variant === 'primary' && [
+          'bg-gradient-to-r from-blue-500 to-blue-600 text-white',
+          'hover:from-blue-600 hover:to-blue-700',
+          'shadow-lg hover:shadow-xl',
+          'border border-blue-400/20',
+        ],
+        variant === 'secondary' && [
+          'bg-white/10 backdrop-blur-sm text-white',
+          'hover:bg-white/20',
+          'border border-white/20 hover:border-white/40',
+        ],
+        variant === 'outline' && [
+          'bg-transparent border-2 border-white/30 text-white',
+          'hover:bg-white/10 hover:border-white/50',
+        ],
+        variant === 'ghost' && [
+          'bg-transparent text-white',
+          'hover:bg-white/10',
+        ],
+        
         className
       )}
     >

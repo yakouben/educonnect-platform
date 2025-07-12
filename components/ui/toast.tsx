@@ -72,7 +72,7 @@ function Toast({ toast, onClose }: ToastProps) {
 
   return (
     <div
-      className={cn(
+    className={cn(
         'pointer-events-auto w-full max-w-sm overflow-hidden rounded-2xl border shadow-lg backdrop-blur-xl transition-all duration-300',
         'transform-gpu',
         isVisible && !isLeaving ? 'translate-x-0 opacity-100 scale-100' : 'translate-x-full opacity-0 scale-95',

@@ -6,9 +6,8 @@ export function MobileWelcomeBanner() {
       <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 rounded-2xl p-6 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-transparent"></div>
         <div className="relative z-10">
-          <p className="text-blue-100 text-sm mb-1">Hey, Tuesday 👋</p>
+          <p className="text-blue-100 text-sm mb-1">Hey, Tuesday </p>
           <h2 className="text-xl font-bold mb-2">Simple, Fast Team Communication</h2>
-          <p className="text-blue-100 text-sm mb-4">Continue your learning journey</p>
           
           {/* Quick Action */}
           <div className="flex items-center space-x-3">

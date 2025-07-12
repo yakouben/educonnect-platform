@@ -37,7 +37,7 @@ export function DashboardHeader() {
           {/* User Profile */}
           <div className="flex items-center space-x-3">
             <div className="text-right">
-              <p className="text-sm font-medium text-gray-900">John Doe</p>
+              <p className="text-sm font-medium text-gray-900">Yakoub Doe</p>
               <p className="text-xs text-gray-500">Student</p>
             </div>
             <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-medium">
