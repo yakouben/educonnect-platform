@@ -16,7 +16,7 @@ const adminPosts = [
       role: 'admin',
       badge: 'Platform Admin',
     },
-    content: 'Welcome to our new learning platform! 🎉 We\'ve added amazing new features including AI-powered course recommendations, interactive coding challenges, and live mentorship sessions. Get ready to supercharge your learning journey!',
+    content: 'Welcome to our new learning platform! 🎉 We have added amazing new features including AI-powered course recommendations, interactive coding challenges, and live mentorship sessions. Get ready to supercharge your learning journey!',
     media: {
       type: 'video',
       url: 'https://images.pexels.com/photos/2166553/pexels-photo-2166553.jpeg?auto=compress&cs=tinysrgb&w=800',
@@ -57,7 +57,7 @@ const adminPosts = [
       role: 'admin',
       badge: 'Platform Admin',
     },
-    content: 'Community Spotlight! 🌟 This week we\'re featuring success stories from our learners who landed their dream jobs after completing our courses. From junior developers to senior data scientists - your dedication inspires us all!',
+    content: 'Community Spotlight! 🌟 This week we are featuring success stories from our learners who landed their dream jobs after completing our courses. From junior developers to senior data scientists - your dedication inspires us all!',
     likes: 156,
     comments: 34,
     shares: 22,
@@ -302,4 +302,4 @@ export function MobileSocialFeed() {
       </GlassCard>
     </div>
   );
-}
+} 

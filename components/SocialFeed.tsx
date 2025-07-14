@@ -10,7 +10,7 @@ const posts = [
       avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150',
       time: '03 June at 08:02 AM',
     },
-    content: 'Hello from Bali! I\'m a traveling content creator and I\'m very excited to join the community!',
+    content: 'Hello from Bali! I'm a traveling content creator and I'm very excited to join the community!',
     media: {
       type: 'video',
       url: 'https://images.pexels.com/photos/2166553/pexels-photo-2166553.jpeg?auto=compress&cs=tinysrgb&w=600',

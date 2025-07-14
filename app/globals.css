@@ -80,38 +80,6 @@
     @apply bg-background text-foreground;
     font-size: 16px; /* Ensure minimum 16px font size for mobile */
   }
-  
-  /* Fixed sidebar layout */
-  html, body {
-    overflow-x: hidden;
-  }
-  
-  /* Sidebar scroll styling */
-  .scrollbar-thin {
-    scrollbar-width: thin;
-  }
-  
-  .scrollbar-thumb-blue-600 {
-    scrollbar-color: #2563eb #1e3a8a;
-  }
-  
-  .scrollbar-track-blue-800\/30::-webkit-scrollbar {
-    width: 6px;
-  }
-  
-  .scrollbar-track-blue-800\/30::-webkit-scrollbar-track {
-    background: rgba(30, 58, 138, 0.3);
-    border-radius: 3px;
-  }
-  
-  .scrollbar-track-blue-800\/30::-webkit-scrollbar-thumb {
-    background: #2563eb;
-    border-radius: 3px;
-  }
-  
-  .scrollbar-track-blue-800\/30::-webkit-scrollbar-thumb:hover {
-    background: #1d4ed8;
-  }
 }
 
 /* Enhanced Mobile Scrollbar Styles */
@@ -274,6 +242,59 @@ button {
 
 .sidebar-item:active {
   transform: translateX(2px) scale(0.98);
+}
+
+/* Custom scrollbar for sidebar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(59, 130, 246, 0.3) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.3);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.5);
+}
+
+/* Fixed sidebar layout */
+.sidebar-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 50;
+}
+
+/* Main content with proper scrolling */
+.main-content-scroll {
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Ensure main content respects sidebar width */
+.content-with-sidebar {
+  margin-left: 256px; /* 64 * 4 = 256px */
+}
+
+@media (max-width: 1024px) {
+  .content-with-sidebar {
+    margin-left: 0;
+  }
 }
 
 /* Enhanced 3D Card Effects */

@@ -59,7 +59,7 @@ export function Sidebar({ activeSection, setActiveSection }: SidebarProps) {
 
   return (
     <div className="fixed left-0 top-0 h-screen w-64 bg-gradient-to-b from-blue-900/95 via-blue-800/95 to-blue-900/95 backdrop-blur-xl text-white flex flex-col z-50 shadow-2xl border-r border-blue-700/30 overflow-hidden">
-      {/* Enhanced Logo Section */}
+      {/* Enhanced Logo Section - Fixed */}
       <div className="flex-shrink-0 p-6 border-b border-blue-700/30">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
@@ -90,66 +90,66 @@ export function Sidebar({ activeSection, setActiveSection }: SidebarProps) {
         </div>
       </div>
 
-      {/* Navigation - Scrollable if content overflows */}
+      {/* Navigation - Scrollable content */}
       <nav className="flex-1 flex flex-col min-h-0">
-        <div className="flex-1 overflow-y-auto px-6 py-6 scrollbar-thin scrollbar-thumb-blue-600 scrollbar-track-blue-800/30">
-          {/* Navigation Items */}
+        <div className="flex-1 px-6 py-4 overflow-y-auto custom-scrollbar">
+        {/* Navigation Items */}
           <div className="space-y-2">
-            {navigationItems.map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <div
-                  key={item.id}
-                  className="animate-slide-up"
-                  style={{ animationDelay: `${index * 50}ms` }}
+          {navigationItems.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <div
+                key={item.id}
+                className="animate-slide-up"
+                style={{ animationDelay: `${index * 50}ms` }}
+              >
+                <button
+                  onClick={() => setActiveSection(item.id)}
+                  className={cn(
+                      "w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group relative overflow-hidden sidebar-item",
+                    activeSection === item.id
+                      ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg"
+                      : "hover:bg-blue-800/50 text-blue-100 hover:text-white"
+                  )}
                 >
-                  <button
-                    onClick={() => setActiveSection(item.id)}
-                    className={cn(
-                      "w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group relative overflow-hidden",
-                      activeSection === item.id
-                        ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg"
-                        : "hover:bg-blue-800/50 text-blue-100 hover:text-white"
-                    )}
-                  >
-                    {/* Enhanced Shine effect */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-                    
-                    <div className={cn(
-                      "w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 relative z-10",
-                      activeSection === item.id
-                        ? "bg-white/20 shadow-lg"
-                        : "bg-blue-800/30 group-hover:bg-blue-700/40"
-                    )}>
-                      <Icon className="w-4 h-4" />
-                    </div>
-                    <span className="font-medium flex-1 relative z-10">{item.label}</span>
-                    
-                    {/* Enhanced Notification count */}
-                    {item.count > 0 && (
+                  {/* Enhanced Shine effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                  
+                  <div className={cn(
+                    "w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 relative z-10",
+                    activeSection === item.id
+                      ? "bg-white/20 shadow-lg"
+                      : "bg-blue-800/30 group-hover:bg-blue-700/40"
+                  )}>
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <span className="font-medium flex-1 relative z-10">{item.label}</span>
+                  
+                  {/* Enhanced Notification count */}
+                  {item.count > 0 && (
                       <div className="w-6 h-6 bg-gradient-to-br from-red-500 to-red-600 text-white text-xs rounded-full flex items-center justify-center shadow-lg ring-2 ring-red-400/30 relative z-10 font-bold">
-                        {item.count > 9 ? '9+' : item.count}
-                      </div>
-                    )}
-                    
-                    {activeSection === item.id && (
-                      <div className="ml-auto w-2 h-2 bg-blue-300 rounded-full shadow-lg relative z-10"></div>
-                    )}
-                  </button>
-                </div>
-              );
-            })}
+                      {item.count > 9 ? '9+' : item.count}
+                    </div>
+                  )}
+                  
+                  {activeSection === item.id && (
+                    <div className="ml-auto w-2 h-2 bg-blue-300 rounded-full shadow-lg relative z-10"></div>
+                  )}
+                </button>
+              </div>
+            );
+          })}
           </div>
         </div>
 
-        {/* Bottom Actions - Fixed at bottom */}
-        <div className="flex-shrink-0 px-6 pb-6 space-y-2">
+        {/* Bottom Fixed Section - Settings & Logout */}
+        <div className="flex-shrink-0 px-6 py-4 border-t border-blue-700/30 space-y-2">
           {/* Settings Button */}
           <div className="animate-slide-up" style={{ animationDelay: `${navigationItems.length * 50}ms` }}>
             <button
               onClick={() => setActiveSection('settings')}
               className={cn(
-                "w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group relative overflow-hidden",
+                "w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group relative overflow-hidden sidebar-item",
                 activeSection === 'settings'
                   ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg"
                   : "hover:bg-blue-800/50 text-blue-100 hover:text-white"
@@ -173,7 +173,7 @@ export function Sidebar({ activeSection, setActiveSection }: SidebarProps) {
 
           {/* Logout Button */}
           <div className="animate-slide-up" style={{ animationDelay: `${(navigationItems.length + 1) * 50}ms` }}>
-            <button className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-blue-100 hover:text-red-300 transition-all duration-200 group relative overflow-hidden">
+            <button className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-blue-100 hover:text-red-300 transition-all duration-200 group relative overflow-hidden sidebar-item">
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-red-500/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
               <div className="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center group-hover:bg-red-500/30 transition-colors relative z-10">
                 <LogOut className="w-4 h-4" />

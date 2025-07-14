@@ -9,7 +9,7 @@ export function ResponsiveBanner() {
   const { success } = useToast();
 
   const handleContinueLearning = () => {
-    success('Let\'s continue!', 'Redirecting to your latest course...');
+    success('Lets continue!', 'Redirecting to your latest course...');
   };
 
   return (

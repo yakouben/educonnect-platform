@@ -36,11 +36,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
-      { url: '/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+      { url: '/icon.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon.png', sizes: '512x512', type: 'image/png' },
     ],
     apple: [
-      { url: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon.png', sizes: '192x192', type: 'image/png' },
     ],
   },
   other: {
@@ -99,13 +99,13 @@ export default function RootLayout({
         
         {/* Favicon */}
         <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/icon-192x192.png" />
+        <link rel="apple-touch-icon" href="/icon.png" />
         
         {/* Preload critical resources */}
         <link rel="modulepreload" href="/_next/static/chunks/webpack.js" />
         <link rel="modulepreload" href="/_next/static/chunks/main.js" />
-        <link rel="preload" href="/icon-192x192.png" as="image" />
-        <link rel="preload" href="/icon-512x512.png" as="image" />
+        <link rel="preload" href="/icon.png" as="image" />
+        <link rel="preload" href="/icon.png" as="image" />
       </head>
       <body className={`${inter.className} overflow-x-hidden font-inter`}>
         <ThemeProvider>

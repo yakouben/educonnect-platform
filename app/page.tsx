@@ -127,7 +127,7 @@ export default function Dashboard() {
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
       </div>
 
-      {/* Desktop Sidebar - Fixed and always visible */}
+      {/* Desktop Sidebar - Hidden on mobile */}
       <div className="hidden lg:block">
         <Sidebar activeSection={activeSection} setActiveSection={handleSectionChange} />
       </div>
@@ -137,17 +137,14 @@ export default function Dashboard() {
         <MobileNavigation activeSection={activeSection} setActiveSection={handleSectionChange} />
       </div>
       
-      {/* Main Content - Fixed layout with proper overflow */}
-      <div className="lg:ml-64">
-        {/* Content container with proper scroll behavior */}
-        <div className="min-h-screen overflow-y-auto">
-          <main className="pt-16 sm:pt-20 pb-6 sm:pb-8 lg:pt-8 lg:pr-8 xl:pr-12 2xl:pr-16 relative z-10">
-            <div className="transition-all duration-300 ease-in-out">
-              {renderContent()}
-            </div>
-          </main>
+      {/* Main Content - Fixed height with scrolling */}
+      <main className="lg:ml-64 h-screen">
+        <div className="h-full overflow-y-auto overflow-x-hidden main-content-scroll pt-16 sm:pt-20 pb-6 sm:pb-8 lg:pt-8 lg:pr-8 xl:pr-12 2xl:pr-16 relative z-10">
+        <div className="transition-all duration-300 ease-in-out">
+          {renderContent()}
+          </div>
         </div>
-      </div>
+      </main>
 
       {/* Toast Notifications */}
       <ToastContainer toasts={toasts} onClose={removeToast} />

@@ -122,23 +122,6 @@ export function MobileNavigation({ activeSection, setActiveSection }: MobileNavi
                 <X className="w-6 h-6 text-white" />
               </button>
             </div>
-
-            {/* User Profile Card */}
-            <GlassCard className="p-4 bg-white/5 border-white/10">
-              <div className="flex items-center space-x-3">
-                <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg ring-2 ring-white/20">
-                  <span className="text-white font-bold text-lg">JD</span>
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-bold text-white">Yakoub Doe</h3>
-                  <p className="text-blue-200 text-sm">Premium Member</p>
-                  <div className="flex items-center space-x-2 mt-1">
-                    <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                    <span className="text-xs text-blue-200">4.8 Rating</span>
-                  </div>
-                </div>
-              </div>
-            </GlassCard>
           </div>
 
           {/* Navigation Content with better mobile spacing */}
@@ -190,83 +173,6 @@ export function MobileNavigation({ activeSection, setActiveSection }: MobileNavi
                 })}
               </ul>
             </div>
-
-            {/* Learning Section */}
-            <div>
-              <h3 className="text-blue-200 text-sm font-medium mb-4 uppercase tracking-wider flex items-center space-x-2">
-                <GraduationCap className="w-4 h-4" />
-                <span>Learning</span>
-              </h3>
-              <ul className="space-y-3">
-                {learningItems.map((item, index) => {
-                  const Icon = item.icon;
-                  return (
-                    <li key={item.id} className="animate-slide-up" style={{ animationDelay: `${(index + 6) * 50}ms` }}>
-                      <button
-                        onClick={() => handleItemClick(item.id)}
-                        className={cn(
-                          "w-full flex items-center space-x-4 px-4 py-4 rounded-xl transition-all duration-200 group touch-manipulation relative overflow-hidden",
-                          activeSection === item.id
-                            ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg scale-105"
-                            : "hover:bg-white/10 text-blue-100 hover:text-white"
-                        )}
-                        style={{ minHeight: '56px' }}
-                      >
-                        <div className={cn(
-                          "w-10 h-10 rounded-xl flex items-center justify-center shadow-sm transition-all duration-200",
-                          activeSection === item.id
-                            ? "bg-white/20 shadow-lg"
-                            : "bg-white/10 group-hover:bg-white/20"
-                        )}>
-                          <Icon className="w-5 h-5" />
-                        </div>
-                        <span className="font-medium text-base flex-1">{item.label}</span>
-                        
-                        {item.count > 0 && (
-                          <div className="w-6 h-6 bg-red-500 text-white text-xs rounded-full flex items-center justify-center animate-bounce-in font-bold">
-                            {item.count > 9 ? '9+' : item.count}
-                          </div>
-                        )}
-                        
-                        {activeSection === item.id && (
-                          <div className="ml-2 w-3 h-3 bg-blue-300 rounded-full animate-glow"></div>
-                        )}
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-
-            {/* Enhanced Progress Card */}
-            <GlassCard gradient="blue" className="p-5 animate-float">
-              <div className="flex items-center justify-between mb-4">
-                <h4 className="text-blue-200 text-sm font-medium">Your Progress</h4>
-                <Trophy className="w-5 h-5 text-yellow-400" />
-              </div>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-blue-200">Courses Completed</span>
-                  <span className="text-lg font-bold text-white">6/10</span>
-                </div>
-                <div className="w-full bg-blue-800/50 rounded-full h-3 overflow-hidden">
-                  <div 
-                    className="bg-gradient-to-r from-blue-400 to-blue-500 h-3 rounded-full transition-all duration-1000 ease-out"
-                    style={{ width: '60%' }}
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-3 text-sm text-blue-200">
-                  <div className="flex items-center space-x-2">
-                    <Zap className="w-4 h-4 text-orange-400" />
-                    <span>7 day streak</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                    <span>4.8 rating</span>
-                  </div>
-                </div>
-              </div>
-            </GlassCard>
           </div>
 
           {/* Enhanced Bottom Actions */}

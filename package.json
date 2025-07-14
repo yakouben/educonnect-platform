@@ -48,6 +48,7 @@
     "@radix-ui/react-toggle": "^1.1.0",
     "@radix-ui/react-toggle-group": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.2",
+    "@supabase/supabase-js": "^2.50.5",
     "@types/node": "20.6.2",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.15",
@@ -69,16 +70,16 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/react": "18.3.23",
     "@lhci/cli": "^0.13.0",
-    "webpack-bundle-analyzer": "^4.9.1",
-    "size-limit": "^11.0.1",
     "@size-limit/preset-app": "^11.0.1",
+    "@types/react": "18.3.23",
+    "imagemin": "^8.0.1",
+    "imagemin-avif": "^0.1.5",
+    "imagemin-webp": "^8.0.0",
     "lighthouse": "^11.4.0",
     "sharp": "^0.32.6",
-    "imagemin": "^8.0.1",
-    "imagemin-webp": "^8.0.0",
-    "imagemin-avif": "^0.1.5"
+    "size-limit": "^11.0.1",
+    "webpack-bundle-analyzer": "^4.9.1"
   },
   "size-limit": [
     {
@@ -102,22 +103,83 @@
         ],
         "numberOfRuns": 3,
         "settings": {
-          "onlyCategories": ["performance", "accessibility", "best-practices", "seo", "pwa"]
+          "onlyCategories": [
+            "performance",
+            "accessibility",
+            "best-practices",
+            "seo",
+            "pwa"
+          ]
         }
       },
       "assert": {
         "assertions": {
-          "categories:performance": ["error", { "minScore": 0.95 }],
-          "categories:accessibility": ["error", { "minScore": 0.95 }],
-          "categories:best-practices": ["error", { "minScore": 0.95 }],
-          "categories:seo": ["error", { "minScore": 0.95 }],
-          "categories:pwa": ["error", { "minScore": 0.90 }],
-          "first-contentful-paint": ["error", { "maxNumericValue": 1800 }],
-          "largest-contentful-paint": ["error", { "maxNumericValue": 2500 }],
-          "first-input-delay": ["error", { "maxNumericValue": 100 }],
-          "cumulative-layout-shift": ["error", { "maxNumericValue": 0.1 }],
-          "total-blocking-time": ["error", { "maxNumericValue": 200 }],
-          "speed-index": ["error", { "maxNumericValue": 3000 }]
+          "categories:performance": [
+            "error",
+            {
+              "minScore": 0.95
+            }
+          ],
+          "categories:accessibility": [
+            "error",
+            {
+              "minScore": 0.95
+            }
+          ],
+          "categories:best-practices": [
+            "error",
+            {
+              "minScore": 0.95
+            }
+          ],
+          "categories:seo": [
+            "error",
+            {
+              "minScore": 0.95
+            }
+          ],
+          "categories:pwa": [
+            "error",
+            {
+              "minScore": 0.9
+            }
+          ],
+          "first-contentful-paint": [
+            "error",
+            {
+              "maxNumericValue": 1800
+            }
+          ],
+          "largest-contentful-paint": [
+            "error",
+            {
+              "maxNumericValue": 2500
+            }
+          ],
+          "first-input-delay": [
+            "error",
+            {
+              "maxNumericValue": 100
+            }
+          ],
+          "cumulative-layout-shift": [
+            "error",
+            {
+              "maxNumericValue": 0.1
+            }
+          ],
+          "total-blocking-time": [
+            "error",
+            {
+              "maxNumericValue": 200
+            }
+          ],
+          "speed-index": [
+            "error",
+            {
+              "maxNumericValue": 3000
+            }
+          ]
         }
       }
     }

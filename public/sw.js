@@ -32,8 +32,8 @@ const CACHE_CONFIG = {
 const CRITICAL_RESOURCES = [
   '/',
   '/manifest.json',
-  '/icon-192x192.png',
-  '/icon-512x512.png',
+  '/icon.png',
+  '/icon.png',
   '/_next/static/css/app/globals.css',
   '/_next/static/chunks/webpack.js',
   '/_next/static/chunks/main.js',
@@ -303,8 +303,8 @@ self.addEventListener('push', event => {
   const data = event.data ? event.data.json() : {};
   const options = {
     body: data.body || 'You have a new notification from Joinly!',
-    icon: data.icon || '/icon-192x192.png',
-    badge: '/icon-192x192.png',
+    icon: data.icon || '/icon.png',
+    badge: '/icon.png',
     image: data.image,
     vibrate: [100, 50, 100],
     data: {
@@ -316,12 +316,12 @@ self.addEventListener('push', event => {
       {
         action: 'open',
         title: 'Open',
-        icon: '/icon-192x192.png'
+        icon: '/icon.png'
       },
       {
         action: 'dismiss',
         title: 'Dismiss',
-        icon: '/icon-192x192.png'
+        icon: '/icon.png'
       }
     ],
     tag: data.tag || 'joinly-notification',
