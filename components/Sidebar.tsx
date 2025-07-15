@@ -38,6 +38,7 @@ import { useTheme } from '@/lib/theme-context';
 import { EnhancedButton } from './ui/enhanced-button';
 import { GlassCard } from './ui/glass-card';
 import { EnhancedSearch } from './ui/enhanced-search';
+import Image from 'next/image';
 
 interface SidebarProps {
   activeSection: string;
@@ -65,7 +66,13 @@ export function Sidebar({ activeSection, setActiveSection }: SidebarProps) {
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 rounded-2xl flex items-center justify-center backdrop-blur-sm shadow-2xl ring-2 ring-blue-400/30 relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
-              <GraduationCap className="w-7 h-7 text-white relative z-10" />
+              <Image
+                src="/logo-joinly.png"
+                alt="Joinly"
+                width={28}
+                height={28}
+                className="w-7 h-7 relative z-10"
+              />
             </div>
             <div>
               <h2 className="font-bold text-xl bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">

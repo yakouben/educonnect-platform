@@ -1,6 +1,7 @@
 'use client';
 
 import { Bell, Search } from 'lucide-react';
+import Image from 'next/image';
 
 export function MobileHeader() {
   return (
@@ -9,7 +10,13 @@ export function MobileHeader() {
         {/* Logo and User */}
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-            <span className="text-white font-bold text-sm">T</span>
+            <Image
+              src="/logo-joinly.png"
+              alt="Joinly"
+              width={20}
+              height={20}
+              className="w-5 h-5"
+            />
           </div>
           <div>
             <h1 className="font-bold text-gray-900 text-lg">Joinly</h1>

@@ -1,0 +1,503 @@
+const CACHE_NAME = 'joinly-v2';
+const RUNTIME_CACHE = 'joinly-runtime-v2';
+const STATIC_CACHE = 'joinly-static-v2';
+const IMAGES_CACHE = 'joinly-images-v2';
+const API_CACHE = 'joinly-api-v2';
+
+// Enhanced cache configuration
+const CACHE_CONFIG = {
+  staticAssets: {
+    name: STATIC_CACHE,
+    maxEntries: 100,
+    maxAgeSeconds: 86400 * 30 // 30 days
+  },
+  images: {
+    name: IMAGES_CACHE,
+    maxEntries: 50,
+    maxAgeSeconds: 86400 * 7 // 7 days
+  },
+  runtime: {
+    name: RUNTIME_CACHE,
+    maxEntries: 200,
+    maxAgeSeconds: 86400 * 1 // 1 day
+  },
+  api: {
+    name: API_CACHE,
+    maxEntries: 50,
+    maxAgeSeconds: 300 // 5 minutes
+  }
+};
+
+// Critical resources to cache immediately
+const CRITICAL_RESOURCES = [
+  '/',
+  '/manifest.json',
+  '/icon.png',
+  '/icon.png',
+  '/_next/static/css/app/globals.css',
+  '/_next/static/chunks/webpack.js',
+  '/_next/static/chunks/main.js',
+  '/_next/static/chunks/pages/_app.js',
+  '/_next/static/chunks/pages/_document.js'
+];
+
+// Performance monitoring
+let performanceMetrics = {
+  cacheHits: 0,
+  cacheMisses: 0,
+  networkRequests: 0,
+  backgroundSyncs: 0,
+  errors: 0
+};
+
+// Utility functions
+function isNavigationRequest(request) {
+  return request.mode === 'navigate';
+}
+
+function isImageRequest(request) {
+  return request.destination === 'image';
+}
+
+function isStaticAsset(request) {
+  return /\.(js|css|woff|woff2|ttf|eot|svg|ico)$/.test(request.url);
+}
+
+function isAPIRequest(request) {
+  return request.url.includes('/api/');
+}
+
+function shouldCacheRequest(request) {
+  // Don't cache non-GET requests
+  if (request.method !== 'GET') return false;
+  
+  // Don't cache requests with query parameters (except images)
+  if (request.url.includes('?') && !isImageRequest(request)) return false;
+  
+  // Don't cache chrome-extension requests
+  if (request.url.startsWith('chrome-extension://')) return false;
+  
+  return true;
+}
+
+// Advanced cache management
+async function cleanupOldCaches() {
+  const cacheNames = await caches.keys();
+  const oldCaches = cacheNames.filter(name => 
+    name !== CACHE_NAME && 
+    name !== RUNTIME_CACHE && 
+    name !== STATIC_CACHE && 
+    name !== IMAGES_CACHE &&
+    name !== API_CACHE
+  );
+  
+  return Promise.all(oldCaches.map(name => caches.delete(name)));
+}
+
+async function manageCacheSize(cacheName, maxEntries) {
+  const cache = await caches.open(cacheName);
+  const keys = await cache.keys();
+  
+  if (keys.length > maxEntries) {
+    const excessKeys = keys.slice(0, keys.length - maxEntries);
+    await Promise.all(excessKeys.map(key => cache.delete(key)));
+  }
+}
+
+// Network strategies
+async function networkFirst(request, cacheName, timeout = 3000) {
+  const cache = await caches.open(cacheName);
+  
+  try {
+    const networkResponse = await Promise.race([
+      fetch(request),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Network timeout')), timeout)
+      )
+    ]);
+    
+    if (networkResponse.ok) {
+      cache.put(request, networkResponse.clone());
+      performanceMetrics.networkRequests++;
+      return networkResponse;
+    }
+  } catch (error) {
+    console.log('Network first failed, falling back to cache:', error);
+  }
+  
+  const cachedResponse = await cache.match(request);
+  if (cachedResponse) {
+    performanceMetrics.cacheHits++;
+    return cachedResponse;
+  }
+  
+  performanceMetrics.cacheMisses++;
+  throw new Error('No network or cache available');
+}
+
+async function cacheFirst(request, cacheName, maxAge = 86400) {
+  const cache = await caches.open(cacheName);
+  const cachedResponse = await cache.match(request);
+  
+  if (cachedResponse) {
+    const cachedDate = new Date(cachedResponse.headers.get('date'));
+    const now = new Date();
+    const age = (now - cachedDate) / 1000;
+    
+    if (age < maxAge) {
+      performanceMetrics.cacheHits++;
+      return cachedResponse;
+    }
+  }
+  
+  try {
+    const networkResponse = await fetch(request);
+    if (networkResponse.ok) {
+      cache.put(request, networkResponse.clone());
+      performanceMetrics.networkRequests++;
+      return networkResponse;
+    }
+  } catch (error) {
+    if (cachedResponse) {
+      performanceMetrics.cacheHits++;
+      return cachedResponse;
+    }
+  }
+  
+  performanceMetrics.cacheMisses++;
+  throw new Error('No network or cache available');
+}
+
+async function staleWhileRevalidate(request, cacheName) {
+  const cache = await caches.open(cacheName);
+  const cachedResponse = await cache.match(request);
+  
+  const fetchPromise = fetch(request).then(response => {
+    if (response.ok) {
+      cache.put(request, response.clone());
+      performanceMetrics.networkRequests++;
+    }
+    return response;
+  }).catch(error => {
+    console.log('Stale while revalidate fetch failed:', error);
+    return null;
+  });
+  
+  if (cachedResponse) {
+    performanceMetrics.cacheHits++;
+    return cachedResponse;
+  }
+  
+  const networkResponse = await fetchPromise;
+  if (networkResponse) {
+    return networkResponse;
+  }
+  
+  performanceMetrics.cacheMisses++;
+  throw new Error('No network or cache available');
+}
+
+// Install event - preinstall critical resources
+self.addEventListener('install', event => {
+  console.log('SW: Installing with enhanced caching...');
+  
+  event.waitUntil(
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+      
+      // Cache critical resources
+      try {
+        await cache.addAll(CRITICAL_RESOURCES);
+        console.log('SW: Critical resources cached successfully');
+      } catch (error) {
+        console.error('SW: Failed to cache critical resources:', error);
+      }
+      
+      // Skip waiting to activate immediately
+      self.skipWaiting();
+    })()
+  );
+});
+
+// Activate event - cleanup old caches and take control
+self.addEventListener('activate', event => {
+  console.log('SW: Activating with enhanced features...');
+  
+  event.waitUntil(
+    (async () => {
+      await cleanupOldCaches();
+      await self.clients.claim();
+      console.log('SW: Activation complete');
+    })()
+  );
+});
+
+// Fetch event - advanced request handling
+self.addEventListener('fetch', event => {
+  const request = event.request;
+  const url = new URL(request.url);
+  
+  // Skip non-GET requests and chrome-extension requests
+  if (!shouldCacheRequest(request)) {
+    return;
+  }
+  
+  // Handle different types of requests with appropriate strategies
+  if (isNavigationRequest(request)) {
+    // Navigation requests - network first with cache fallback
+    event.respondWith(
+      networkFirst(request, RUNTIME_CACHE, 2000)
+        .catch(() => caches.match('/') || fetch(request))
+    );
+  } else if (isImageRequest(request)) {
+    // Images - cache first with long TTL
+    event.respondWith(
+      cacheFirst(request, IMAGES_CACHE, CACHE_CONFIG.images.maxAgeSeconds)
+        .then(response => {
+          // Manage cache size
+          manageCacheSize(IMAGES_CACHE, CACHE_CONFIG.images.maxEntries);
+          return response;
+        })
+    );
+  } else if (isStaticAsset(request)) {
+    // Static assets - cache first with long TTL
+    event.respondWith(
+      cacheFirst(request, STATIC_CACHE, CACHE_CONFIG.staticAssets.maxAgeSeconds)
+        .then(response => {
+          manageCacheSize(STATIC_CACHE, CACHE_CONFIG.staticAssets.maxEntries);
+          return response;
+        })
+    );
+  } else if (isAPIRequest(request)) {
+    // API requests - network first with short-lived cache
+    event.respondWith(
+      networkFirst(request, API_CACHE, 1000)
+        .catch(() => {
+          // Return cached response if available
+          return caches.match(request).then(cachedResponse => {
+            if (cachedResponse) {
+              performanceMetrics.cacheHits++;
+              return cachedResponse;
+            }
+            performanceMetrics.cacheMisses++;
+            throw new Error('No cached API response available');
+          });
+        })
+    );
+  } else {
+    // Other requests - stale while revalidate
+    event.respondWith(
+      staleWhileRevalidate(request, RUNTIME_CACHE)
+        .then(response => {
+          manageCacheSize(RUNTIME_CACHE, CACHE_CONFIG.runtime.maxEntries);
+          return response;
+        })
+    );
+  }
+});
+
+// Enhanced Push Notification handling
+self.addEventListener('push', event => {
+  console.log('SW: Push notification received');
+  
+  const data = event.data ? event.data.json() : {};
+  const options = {
+    body: data.body || 'You have a new notification from Joinly!',
+    icon: data.icon || '/icon.png',
+    badge: '/icon.png',
+    image: data.image,
+    vibrate: [100, 50, 100],
+    data: {
+      url: data.url || '/',
+      timestamp: Date.now(),
+      ...data
+    },
+    actions: [
+      {
+        action: 'open',
+        title: 'Open',
+        icon: '/icon.png'
+      },
+      {
+        action: 'dismiss',
+        title: 'Dismiss',
+        icon: '/icon.png'
+      }
+    ],
+    tag: data.tag || 'joinly-notification',
+    renotify: true,
+    requireInteraction: data.requireInteraction || false
+  };
+  
+  event.waitUntil(
+    self.registration.showNotification(data.title || 'Joinly', options)
+  );
+});
+
+// Enhanced notification click handling
+self.addEventListener('notificationclick', event => {
+  console.log('SW: Notification click received');
+  
+  event.notification.close();
+  
+  const action = event.action;
+  const notificationData = event.notification.data;
+  
+  if (action === 'dismiss') {
+    return;
+  }
+  
+  const urlToOpen = notificationData.url || '/';
+  
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true })
+      .then(clientList => {
+        // Check if there's already a window open
+        for (const client of clientList) {
+          if (client.url === urlToOpen && 'focus' in client) {
+            return client.focus();
+          }
+        }
+        
+        // Open new window
+        if (clients.openWindow) {
+          return clients.openWindow(urlToOpen);
+        }
+      })
+  );
+});
+
+// Enhanced Background Sync
+self.addEventListener('sync', event => {
+  console.log('SW: Background sync triggered:', event.tag);
+  
+  if (event.tag === 'background-sync') {
+    event.waitUntil(doBackgroundSync());
+  } else if (event.tag === 'performance-sync') {
+    event.waitUntil(syncPerformanceMetrics());
+  }
+});
+
+async function doBackgroundSync() {
+  try {
+    performanceMetrics.backgroundSyncs++;
+    
+    // Sync offline actions
+    const offlineActions = await getOfflineActions();
+    for (const action of offlineActions) {
+      try {
+        await fetch(action.url, {
+          method: action.method,
+          headers: action.headers,
+          body: action.body
+        });
+        await removeOfflineAction(action.id);
+      } catch (error) {
+        console.log('Failed to sync action:', error);
+      }
+    }
+    
+    // Prefetch critical resources
+    await prefetchCriticalResources();
+    
+    console.log('SW: Background sync completed');
+  } catch (error) {
+    console.error('SW: Background sync failed:', error);
+    performanceMetrics.errors++;
+  }
+}
+
+async function syncPerformanceMetrics() {
+  try {
+    // Send performance metrics to analytics endpoint
+    if (performanceMetrics.networkRequests > 0) {
+      await fetch('/api/analytics/performance', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          metrics: performanceMetrics,
+          timestamp: Date.now(),
+          userAgent: navigator.userAgent
+        })
+      });
+      
+      // Reset metrics after sync
+      performanceMetrics = {
+        cacheHits: 0,
+        cacheMisses: 0,
+        networkRequests: 0,
+        backgroundSyncs: 0,
+        errors: 0
+      };
+    }
+  } catch (error) {
+    console.log('Failed to sync performance metrics:', error);
+  }
+}
+
+async function getOfflineActions() {
+  // In a real app, this would read from IndexedDB
+  return [];
+}
+
+async function removeOfflineAction(id) {
+  // In a real app, this would remove from IndexedDB
+  return Promise.resolve();
+}
+
+async function prefetchCriticalResources() {
+  const cache = await caches.open(RUNTIME_CACHE);
+  const criticalUrls = [
+    '/',
+    '/courses',
+    '/spaces',
+    '/members',
+    '/messages'
+  ];
+  
+  for (const url of criticalUrls) {
+    try {
+      const response = await fetch(url);
+      if (response.ok) {
+        await cache.put(url, response);
+      }
+    } catch (error) {
+      console.log('Failed to prefetch:', url, error);
+    }
+  }
+}
+
+// Periodic cleanup
+setInterval(async () => {
+  await Promise.all([
+    manageCacheSize(RUNTIME_CACHE, CACHE_CONFIG.runtime.maxEntries),
+    manageCacheSize(IMAGES_CACHE, CACHE_CONFIG.images.maxEntries),
+    manageCacheSize(STATIC_CACHE, CACHE_CONFIG.staticAssets.maxEntries),
+    manageCacheSize(API_CACHE, CACHE_CONFIG.api.maxEntries)
+  ]);
+}, 300000); // Every 5 minutes
+
+// Handle updates
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  } else if (event.data && event.data.type === 'GET_PERFORMANCE_METRICS') {
+    event.ports[0].postMessage({
+      type: 'PERFORMANCE_METRICS',
+      data: performanceMetrics
+    });
+  }
+});
+
+// Error handling
+self.addEventListener('error', event => {
+  console.error('SW: Error occurred:', event.error);
+  performanceMetrics.errors++;
+});
+
+self.addEventListener('unhandledrejection', event => {
+  console.error('SW: Unhandled promise rejection:', event.reason);
+  performanceMetrics.errors++;
+});
+
+console.log('SW: Advanced service worker initialized successfully'); 

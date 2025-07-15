@@ -50,11 +50,11 @@ const spaces: Space[] = [
     createdAt: '2024-01-15',
     color: 'bg-blue-500',
     tags: ['react', 'nodejs', 'javascript'],
-    owner: { id: '1', name: 'Alex Rivera', avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150', role: 'admin', isOnline: true },
+    owner: { id: '1', name: 'Alex Rivera', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex', role: 'admin', isOnline: true },
     members: [
-      { id: '1', name: 'Alex Rivera', avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150', role: 'admin', isOnline: true },
-      { id: '2', name: 'Maya Patel', avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150', role: 'moderator', isOnline: false },
-      { id: '3', name: 'Jordan Kim', avatar: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150', role: 'member', isOnline: true }
+      { id: '1', name: 'Alex Rivera', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex', role: 'admin', isOnline: true },
+      { id: '2', name: 'Maya Patel', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Maya', role: 'moderator', isOnline: false },
+      { id: '3', name: 'Jordan Kim', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jordan', role: 'member', isOnline: true }
     ]
   },
   {
@@ -68,7 +68,7 @@ const spaces: Space[] = [
     createdAt: '2024-01-12',
     color: 'bg-purple-500',
     tags: ['ui', 'ux', 'design'],
-    owner: { id: '4', name: 'Sophie Chen', avatar: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=150', role: 'admin', isOnline: true },
+    owner: { id: '4', name: 'Sophie Chen', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sophie', role: 'admin', isOnline: true },
     members: []
   },
   {
@@ -82,7 +82,7 @@ const spaces: Space[] = [
     createdAt: '2024-01-10',
     color: 'bg-green-500',
     tags: ['startup', 'entrepreneurship', 'business'],
-    owner: { id: '5', name: 'Marcus Johnson', avatar: 'https://images.pexels.com/photos/1040881/pexels-photo-1040881.jpeg?auto=compress&cs=tinysrgb&w=150', role: 'admin', isOnline: false },
+    owner: { id: '5', name: 'Marcus Johnson', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Marcus', role: 'admin', isOnline: false },
     members: []
   }
 ];
@@ -205,7 +205,7 @@ export function SpacesSection() {
   const defaultUser: SpaceMember = {
     id: '7',
     name: 'You',
-    avatar: 'https://images.pexels.com/photos/1040881/pexels-photo-1040881.jpeg?auto=compress&cs=tinysrgb&w=150',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=You',
     role: 'member',
     isOnline: true,
   };

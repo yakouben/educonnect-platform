@@ -5,6 +5,7 @@ import { Menu, X, Home, BookOpen, Users, MessageSquare, Hash, Calendar, CreditCa
 import { cn } from '@/lib/utils';
 import { GlassCard } from './ui/glass-card';
 import { EnhancedButton } from './ui/enhanced-button';
+import Image from 'next/image';
 
 interface MobileNavigationProps {
   activeSection: string;
@@ -53,7 +54,13 @@ export function MobileNavigation({ activeSection, setActiveSection }: MobileNavi
             
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg animate-glow">
-                <GraduationCap className="w-6 h-6 text-white" />
+                <Image
+                  src="/logo-joinly.png"
+                  alt="Joinly"
+                  width={24}
+                  height={24}
+                  className="w-6 h-6"
+                />
               </div>
               <div>
                 <h1 className="font-bold text-white text-lg">Joinly</h1>
@@ -106,7 +113,13 @@ export function MobileNavigation({ activeSection, setActiveSection }: MobileNavi
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg animate-glow">
-                  <GraduationCap className="w-7 h-7 text-white" />
+                  <Image
+                    src="/logo-joinly.png"
+                    alt="Joinly"
+                    width={28}
+                    height={28}
+                    className="w-7 h-7"
+                  />
                 </div>
                 <div>
                   <h2 className="font-bold text-xl text-white">Joinly</h2>

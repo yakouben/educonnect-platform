@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Search, Bell, MoreVertical, Heart, Share, Download, Menu, X, Settings, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 interface MobileAppHeaderProps {
   title: string;
@@ -105,15 +106,26 @@ export function MobileAppHeader({
               )}
               
               {showMenu && !showBack && (
-                <button
-                  onClick={() => setShowDropdown(!showDropdown)}
-                  className={cn(
-                    "p-2 rounded-full transition-all duration-200 active:scale-95 touch-manipulation",
-                    getButtonStyle()
-                  )}
-                >
-                  <Menu className="w-5 h-5" />
-                </button>
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-sm">
+                    <Image
+                      src="/logo-joinly.png"
+                      alt="Joinly"
+                      width={20}
+                      height={20}
+                      className="w-5 h-5"
+                    />
+                  </div>
+                  <button
+                    onClick={() => setShowDropdown(!showDropdown)}
+                    className={cn(
+                      "p-2 rounded-full transition-all duration-200 active:scale-95 touch-manipulation",
+                      getButtonStyle()
+                    )}
+                  >
+                    <Menu className="w-5 h-5" />
+                  </button>
+                </div>
               )}
               
               {/* Title */}
