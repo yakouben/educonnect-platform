@@ -1,0 +1,135 @@
+# ========================================
+# UPDATED ENVIRONMENT VARIABLES
+# Matches your existing code structure
+# ========================================
+
+# ========================================
+# SUPABASE CONFIGURATION (Required)
+# ========================================
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+
+# ========================================
+# YOUTUBE API CONFIGURATION (Required)
+# ========================================
+YOUTUBE_API_KEY=your_youtube_api_key
+YOUTUBE_CLIENT_ID=your_youtube_client_id
+YOUTUBE_CLIENT_SECRET=your_youtube_client_secret
+
+# ========================================
+# GOOGLE OAUTH CONFIGURATION (Required)
+# ========================================
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+# ========================================
+# REDIRECT URIS (Required)
+# ========================================
+YOUTUBE_REDIRECT_URI=http://localhost:3000/api/auth/google/callback
+GOOGLE_REDIRECT_URI=http://localhost:3000/api/auth/google/callback
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
+# ========================================
+# VIDEO UPLOAD CONFIGURATION
+# ========================================
+NEXT_PUBLIC_MAX_VIDEO_SIZE=100
+NEXT_PUBLIC_ALLOWED_VIDEO_TYPES=mp4,avi,mov,wmv,flv,webm
+NEXT_PUBLIC_UPLOAD_CHUNK_SIZE=5242880
+NEXT_PUBLIC_UPLOAD_ENDPOINT=/api/youtube/upload
+
+# ========================================
+# VIDEO PROCESSING CONFIGURATION
+# ========================================
+NEXT_PUBLIC_VIDEO_PROCESSING_ENABLED=true
+NEXT_PUBLIC_THUMBNAIL_GENERATION_ENABLED=true
+NEXT_PUBLIC_VIDEO_COMPRESSION_ENABLED=true
+
+# ========================================
+# STORAGE CONFIGURATION
+# ========================================
+NEXT_PUBLIC_STORAGE_PROVIDER=supabase
+NEXT_PUBLIC_STORAGE_BUCKET=video-uploads
+NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET=video-uploads
+
+# ========================================
+# VIDEO PLAYER CONFIGURATION
+# ========================================
+NEXT_PUBLIC_VIDEO_PLAYER_PROVIDER=youtube
+NEXT_PUBLIC_VIDEO_PLAYER_AUTOPLAY=false
+NEXT_PUBLIC_VIDEO_PLAYER_CONTROLS=true
+NEXT_PUBLIC_VIDEO_PLAYER_QUALITY=auto
+NEXT_PUBLIC_VIDEO_PLAYER_WIDTH=560
+NEXT_PUBLIC_VIDEO_PLAYER_HEIGHT=315
+
+# ========================================
+# YOUTUBE UPLOAD CONFIGURATION
+# ========================================
+NEXT_PUBLIC_YOUTUBE_UPLOAD_ENABLED=true
+NEXT_PUBLIC_YOUTUBE_AUTO_PUBLISH=false
+NEXT_PUBLIC_YOUTUBE_PRIVACY_STATUS=private
+NEXT_PUBLIC_YOUTUBE_CATEGORY_ID=27
+NEXT_PUBLIC_YOUTUBE_TAGS=course,education,learning
+
+# ========================================
+# API RATE LIMITING
+# ========================================
+NEXT_PUBLIC_API_RATE_LIMIT=100
+NEXT_PUBLIC_UPLOAD_RATE_LIMIT=10
+NEXT_PUBLIC_YOUTUBE_API_RATE_LIMIT=50
+
+# ========================================
+# SECURITY CONFIGURATION
+# ========================================
+NEXT_PUBLIC_JWT_SECRET=your_jwt_secret_key_here
+NEXT_PUBLIC_ENCRYPTION_KEY=your_encryption_key_here
+NEXT_PUBLIC_CSRF_SECRET=your_csrf_secret_here
+
+# ========================================
+# DEVELOPMENT CONFIGURATION
+# ========================================
+NODE_ENV=development
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_DEBUG_MODE=true
+NEXT_PUBLIC_LOG_LEVEL=debug
+
+# ========================================
+# DATABASE TABLES (for reference)
+# ========================================
+# Your existing tables:
+# - course_videos (id, title, description, youtube_url, youtube_id, thumbnail_url, created_at, user_id)
+# - user_youtube_tokens (id, user_id, access_token, refresh_token, expires_at)
+# - users (auth_id, name, email, etc.)
+
+# ========================================
+# OPTIONAL CONFIGURATIONS
+# ========================================
+
+# Analytics (Optional)
+NEXT_PUBLIC_ANALYTICS_ENABLED=false
+NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=your_ga_id
+
+# CDN (Optional)
+NEXT_PUBLIC_CDN_URL=your_cdn_url
+NEXT_PUBLIC_CDN_ENABLED=false
+
+# Email (Optional - for notifications)
+SMTP_HOST=your_smtp_host
+SMTP_PORT=587
+SMTP_USER=your_smtp_user
+SMTP_PASS=your_smtp_password
+NEXT_PUBLIC_EMAIL_FROM=noreply@yourdomain.com
+
+# Webhooks (Optional)
+NEXT_PUBLIC_WEBHOOK_URL=your_webhook_url
+NEXT_PUBLIC_WEBHOOK_SECRET=your_webhook_secret
+
+# ========================================
+# PRODUCTION OVERRIDES (when deploying)
+# ========================================
+# NODE_ENV=production
+# NEXT_PUBLIC_APP_URL=https://yourdomain.com
+# YOUTUBE_REDIRECT_URI=https://yourdomain.com/api/auth/google/callback
+# GOOGLE_REDIRECT_URI=https://yourdomain.com/api/auth/google/callback
+# NEXT_PUBLIC_DEBUG_MODE=false
+# NEXT_PUBLIC_LOG_LEVEL=error 

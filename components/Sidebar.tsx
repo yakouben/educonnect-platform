@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   LayoutDashboard,
   CreditCard,
@@ -32,12 +32,15 @@ import {
   TrendingUp,
   Activity,
   Coffee,
-  Flame
+  Flame,
+  Link
 } from 'lucide-react';
 import { useTheme } from '@/lib/theme-context';
 import { EnhancedButton } from './ui/enhanced-button';
 import { GlassCard } from './ui/glass-card';
 import { EnhancedSearch } from './ui/enhanced-search';
+import { CommunityReferralModal } from './CommunityReferralModal';
+import { getCurrentUser, getOrCreateUserProfile } from '@/lib/supabase';
 import Image from 'next/image';
 
 interface SidebarProps {
@@ -57,8 +60,53 @@ const navigationItems = [
 export function Sidebar({ activeSection, setActiveSection }: SidebarProps) {
   const { theme, toggleTheme } = useTheme();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [showReferralModal, setShowReferralModal] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [userProfile, setUserProfile] = useState<any>(null);
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
+
+  // Load user data on component mount
+  useEffect(() => {
+    loadUserData();
+  }, []);
+
+  const loadUserData = async () => {
+    try {
+      const user = await getCurrentUser();
+      setCurrentUser(user);
+      
+      if (user) {
+        // Try to get or create user profile
+        const { data: profile, error } = await getOrCreateUserProfile(user.id, {
+          name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'User',
+          email: user.email || '',
+          avatar: user.user_metadata?.avatar_url
+        });
+        
+        if (profile) {
+          setUserProfile(profile);
+        } else if (error) {
+          console.error('Error with user profile:', error);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading user data:', error);
+    } finally {
+      setIsLoadingUser(false);
+    }
+  };
+
+  const handleReferralClick = () => {
+    if (!currentUser || !userProfile) {
+      // Show a message that user needs to be logged in
+      alert('Please log in to access referral links');
+      return;
+    }
+    setShowReferralModal(true);
+  };
 
   return (
+    <>
     <div className="fixed left-0 top-0 h-screen w-64 bg-gradient-to-b from-blue-900/95 via-blue-800/95 to-blue-900/95 backdrop-blur-xl text-white flex flex-col z-50 shadow-2xl border-r border-blue-700/30 overflow-hidden">
       {/* Enhanced Logo Section - Fixed */}
       <div className="flex-shrink-0 p-6 border-b border-blue-700/30">
@@ -147,12 +195,32 @@ export function Sidebar({ activeSection, setActiveSection }: SidebarProps) {
             );
           })}
           </div>
+
+            {/* Referral Links Section */}
+            <div className="mt-6 pt-6 border-t border-blue-700/30">
+              <div className="animate-slide-up" style={{ animationDelay: `${navigationItems.length * 50}ms` }}>
+                <button
+                  onClick={handleReferralClick}
+                  disabled={isLoadingUser}
+                  className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-green-500/10 text-blue-100 hover:text-green-300 transition-all duration-200 group relative overflow-hidden sidebar-item disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-green-500/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                  <div className="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center group-hover:bg-green-500/30 transition-colors relative z-10">
+                    <Link className="w-4 h-4" />
+                  </div>
+                  <span className="font-medium relative z-10">
+                    {isLoadingUser ? 'Loading...' : 'Referral Links'}
+                  </span>
+                  <div className="ml-auto w-2 h-2 bg-green-400 rounded-full shadow-lg relative z-10"></div>
+                </button>
+              </div>
+            </div>
         </div>
 
         {/* Bottom Fixed Section - Settings & Logout */}
         <div className="flex-shrink-0 px-6 py-4 border-t border-blue-700/30 space-y-2">
           {/* Settings Button */}
-          <div className="animate-slide-up" style={{ animationDelay: `${navigationItems.length * 50}ms` }}>
+            <div className="animate-slide-up" style={{ animationDelay: `${(navigationItems.length + 1) * 50}ms` }}>
             <button
               onClick={() => setActiveSection('settings')}
               className={cn(
@@ -179,7 +247,7 @@ export function Sidebar({ activeSection, setActiveSection }: SidebarProps) {
           </div>
 
           {/* Logout Button */}
-          <div className="animate-slide-up" style={{ animationDelay: `${(navigationItems.length + 1) * 50}ms` }}>
+            <div className="animate-slide-up" style={{ animationDelay: `${(navigationItems.length + 2) * 50}ms` }}>
             <button className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-red-500/10 text-blue-100 hover:text-red-300 transition-all duration-200 group relative overflow-hidden sidebar-item">
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-red-500/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
               <div className="w-8 h-8 bg-red-500/20 rounded-lg flex items-center justify-center group-hover:bg-red-500/30 transition-colors relative z-10">
@@ -198,18 +266,22 @@ export function Sidebar({ activeSection, setActiveSection }: SidebarProps) {
             <EnhancedSearch
               placeholder="Search courses, members, spaces..."
               recentSearches={['React', 'JavaScript', 'UI Design']}
-              trendingSearches={['AI', 'Web3', 'Mobile Development']}
-              onResultSelect={() => setIsSearchOpen(false)}
+                onClose={() => setIsSearchOpen(false)}
             />
+            </div>
           </div>
-          <button
-            onClick={() => setIsSearchOpen(false)}
-            className="absolute top-4 right-4 p-2 text-white hover:bg-white/10 rounded-xl transition-colors"
-          >
-            <LogOut className="w-5 h-5" />
-          </button>
+        )}
         </div>
+
+      {/* Community Referral Modal */}
+      {currentUser && userProfile && (
+        <CommunityReferralModal
+          isOpen={showReferralModal}
+          onClose={() => setShowReferralModal(false)}
+          currentUserId={userProfile.id}
+          currentUserName={userProfile.name}
+        />
       )}
-    </div>
+    </>
   );
 }

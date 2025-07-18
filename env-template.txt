@@ -1,0 +1,75 @@
+# Copy this file to .env.local and fill in your actual values
+
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+
+# YouTube API Configuration
+YOUTUBE_API_KEY=your_youtube_api_key
+YOUTUBE_CLIENT_ID=your_youtube_client_id
+YOUTUBE_CLIENT_SECRET=your_youtube_client_secret
+YOUTUBE_REDIRECT_URI=http://localhost:3000/api/auth/google/callback
+
+# Google OAuth Configuration
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+GOOGLE_REDIRECT_URI=http://localhost:3000/api/auth/google/callback
+
+# Video Upload Configuration
+NEXT_PUBLIC_MAX_VIDEO_SIZE=100 # MB
+NEXT_PUBLIC_ALLOWED_VIDEO_TYPES=mp4,avi,mov,wmv,flv,webm
+NEXT_PUBLIC_UPLOAD_CHUNK_SIZE=5242880 # 5MB chunks
+
+# Video Processing Configuration
+NEXT_PUBLIC_VIDEO_PROCESSING_ENABLED=true
+NEXT_PUBLIC_THUMBNAIL_GENERATION_ENABLED=true
+NEXT_PUBLIC_VIDEO_COMPRESSION_ENABLED=true
+
+# Storage Configuration (if using external storage)
+NEXT_PUBLIC_STORAGE_PROVIDER=supabase # or 'aws', 'cloudinary', etc.
+NEXT_PUBLIC_STORAGE_BUCKET=video-uploads
+
+# Video Player Configuration
+NEXT_PUBLIC_VIDEO_PLAYER_PROVIDER=youtube # or 'custom', 'vimeo'
+NEXT_PUBLIC_VIDEO_PLAYER_AUTOPLAY=false
+NEXT_PUBLIC_VIDEO_PLAYER_CONTROLS=true
+NEXT_PUBLIC_VIDEO_PLAYER_QUALITY=auto
+
+# YouTube Upload Configuration
+NEXT_PUBLIC_YOUTUBE_UPLOAD_ENABLED=true
+NEXT_PUBLIC_YOUTUBE_AUTO_PUBLISH=false
+NEXT_PUBLIC_YOUTUBE_PRIVACY_STATUS=private # private, unlisted, public
+NEXT_PUBLIC_YOUTUBE_CATEGORY_ID=27 # Education category
+
+# API Rate Limiting
+NEXT_PUBLIC_API_RATE_LIMIT=100 # requests per hour
+NEXT_PUBLIC_UPLOAD_RATE_LIMIT=10 # uploads per hour
+
+# Security Configuration
+NEXT_PUBLIC_JWT_SECRET=your_jwt_secret_key
+NEXT_PUBLIC_ENCRYPTION_KEY=your_encryption_key
+
+# Development Configuration
+NODE_ENV=development
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_DEBUG_MODE=true
+
+# Video Analytics (optional)
+NEXT_PUBLIC_ANALYTICS_ENABLED=false
+NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=your_ga_id
+
+# CDN Configuration (optional)
+NEXT_PUBLIC_CDN_URL=your_cdn_url
+NEXT_PUBLIC_CDN_ENABLED=false
+
+# Email Configuration (for notifications)
+SMTP_HOST=your_smtp_host
+SMTP_PORT=587
+SMTP_USER=your_smtp_user
+SMTP_PASS=your_smtp_password
+NEXT_PUBLIC_EMAIL_FROM=noreply@yourdomain.com
+
+# Webhook Configuration (optional)
+NEXT_PUBLIC_WEBHOOK_URL=your_webhook_url
+NEXT_PUBLIC_WEBHOOK_SECRET=your_webhook_secret 

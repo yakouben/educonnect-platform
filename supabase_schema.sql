@@ -150,6 +150,35 @@ CREATE TABLE public.space_join_requests (
     UNIQUE(space_id, user_id)
 );
 
+-- Community referral links (replaces space-specific referral links)
+CREATE TABLE public.community_referral_links (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    coach_id UUID REFERENCES public.users(id) ON DELETE CASCADE,
+    referral_code VARCHAR(50) UNIQUE NOT NULL,
+    is_active BOOLEAN DEFAULT true,
+    total_uses INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Community referral usage tracking
+CREATE TABLE public.community_referral_usage (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    referral_link_id UUID REFERENCES public.community_referral_links(id) ON DELETE CASCADE,
+    used_by UUID REFERENCES public.users(id) ON DELETE CASCADE,
+    used_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    ip_address INET,
+    user_agent TEXT
+);
+
+-- Remove the old space referral tables
+DROP TABLE IF EXISTS public.space_referral_usage;
+DROP TABLE IF EXISTS public.space_referral_links;
+
+-- Remove referral tracking from spaces table
+ALTER TABLE public.spaces DROP COLUMN IF EXISTS referral_enabled;
+ALTER TABLE public.spaces DROP COLUMN IF EXISTS referral_reward_description;
+
 -- User sessions (for tracking online status)
 CREATE TABLE public.user_sessions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -216,6 +245,16 @@ CREATE INDEX idx_message_reactions_user_id ON public.message_reactions(user_id);
 CREATE INDEX idx_notifications_user_id ON public.notifications(user_id);
 CREATE INDEX idx_notifications_is_read ON public.notifications(is_read);
 CREATE INDEX idx_notifications_created_at ON public.notifications(created_at);
+
+-- Referral links indexes
+CREATE INDEX idx_community_referral_links_coach_id ON public.community_referral_links(coach_id);
+CREATE INDEX idx_community_referral_links_referral_code ON public.community_referral_links(referral_code);
+CREATE INDEX idx_community_referral_links_is_active ON public.community_referral_links(is_active);
+
+-- Referral usage indexes
+CREATE INDEX idx_community_referral_usage_referral_link_id ON public.community_referral_usage(referral_link_id);
+CREATE INDEX idx_community_referral_usage_used_by ON public.community_referral_usage(used_by);
+CREATE INDEX idx_community_referral_usage_used_at ON public.community_referral_usage(used_at);
 
 -- ============================================================================
 -- TRIGGERS
@@ -523,3 +562,156 @@ COMMENT ON TABLE public.messages IS 'Chat messages within spaces';
 COMMENT ON TABLE public.message_reactions IS 'Emoji reactions to messages';
 COMMENT ON TABLE public.message_attachments IS 'File attachments for messages';
 COMMENT ON TABLE public.notifications IS 'User notifications system'; 
+
+-- ============================================================================
+-- COMMUNITY REFERRAL SYSTEM SQL FOR SUPABASE
+-- ============================================================================
+
+-- Enable necessary extensions
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+-- ============================================================================
+-- DROP OLD TABLES (if they exist)
+-- ============================================================================
+
+-- Drop old space referral tables if they exist
+DROP TABLE IF EXISTS public.space_referral_usage CASCADE;
+DROP TABLE IF EXISTS public.space_referral_links CASCADE;
+
+-- ============================================================================
+-- CREATE NEW COMMUNITY REFERRAL TABLES
+-- ============================================================================
+
+-- Community referral links (replaces space-specific referral links)
+CREATE TABLE public.community_referral_links (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    coach_id UUID REFERENCES public.users(id) ON DELETE CASCADE,
+    referral_code VARCHAR(50) UNIQUE NOT NULL,
+    is_active BOOLEAN DEFAULT true,
+    total_uses INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Community referral usage tracking
+CREATE TABLE public.community_referral_usage (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    referral_link_id UUID REFERENCES public.community_referral_links(id) ON DELETE CASCADE,
+    used_by UUID REFERENCES public.users(id) ON DELETE CASCADE,
+    used_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    ip_address INET,
+    user_agent TEXT
+);
+
+-- ============================================================================
+-- CREATE INDEXES
+-- ============================================================================
+
+-- Community referral links indexes
+CREATE INDEX idx_community_referral_links_coach_id ON public.community_referral_links(coach_id);
+CREATE INDEX idx_community_referral_links_referral_code ON public.community_referral_links(referral_code);
+CREATE INDEX idx_community_referral_links_is_active ON public.community_referral_links(is_active);
+
+-- Community referral usage indexes
+CREATE INDEX idx_community_referral_usage_referral_link_id ON public.community_referral_usage(referral_link_id);
+CREATE INDEX idx_community_referral_usage_used_by ON public.community_referral_usage(used_by);
+CREATE INDEX idx_community_referral_usage_used_at ON public.community_referral_usage(used_at);
+
+-- ============================================================================
+-- CREATE TRIGGERS
+-- ============================================================================
+
+-- Function to update updated_at timestamp
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+-- Apply updated_at trigger to community referral links
+CREATE TRIGGER update_community_referral_links_updated_at 
+    BEFORE UPDATE ON public.community_referral_links
+    FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================================================
+-- ENABLE ROW LEVEL SECURITY (RLS)
+-- ============================================================================
+
+-- Enable RLS on community referral tables
+ALTER TABLE public.community_referral_links ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.community_referral_usage ENABLE ROW LEVEL SECURITY;
+
+-- ============================================================================
+-- RLS POLICIES
+-- ============================================================================
+
+-- Community referral links policies
+CREATE POLICY "Users can view all active referral links" ON public.community_referral_links
+    FOR SELECT USING (is_active = true);
+
+CREATE POLICY "Users can create their own referral links" ON public.community_referral_links
+    FOR INSERT WITH CHECK (
+        auth.uid() IS NOT NULL AND
+        coach_id = (SELECT id FROM public.users WHERE auth_id = auth.uid())
+    );
+
+CREATE POLICY "Users can update their own referral links" ON public.community_referral_links
+    FOR UPDATE USING (
+        coach_id = (SELECT id FROM public.users WHERE auth_id = auth.uid())
+    );
+
+-- Community referral usage policies
+CREATE POLICY "Users can view referral usage for active links" ON public.community_referral_usage
+    FOR SELECT USING (
+        referral_link_id IN (
+            SELECT id FROM public.community_referral_links 
+            WHERE is_active = true
+        )
+    );
+
+CREATE POLICY "Users can insert referral usage" ON public.community_referral_usage
+    FOR INSERT WITH CHECK (
+        auth.uid() IS NOT NULL AND
+        used_by = (SELECT id FROM public.users WHERE auth_id = auth.uid())
+    );
+
+-- ============================================================================
+-- GRANT PERMISSIONS
+-- ============================================================================
+
+-- Grant necessary permissions
+GRANT ALL ON public.community_referral_links TO authenticated;
+GRANT ALL ON public.community_referral_usage TO authenticated;
+GRANT USAGE ON SCHEMA public TO authenticated;
+
+-- ============================================================================
+-- REALTIME SUBSCRIPTIONS
+-- ============================================================================
+
+-- Enable realtime for community referral links
+ALTER PUBLICATION supabase_realtime ADD TABLE public.community_referral_links;
+
+-- ============================================================================
+-- COMMENTS
+-- ============================================================================
+
+COMMENT ON TABLE public.community_referral_links IS 'Community-wide referral links created by coaches';
+COMMENT ON TABLE public.community_referral_usage IS 'Tracking of referral link usage';
+
+-- ============================================================================
+-- SAMPLE DATA (Optional - for testing)
+-- ============================================================================
+
+-- Uncomment the following lines if you want to insert sample data for testing
+-- Make sure you have users in your users table first
+
+/*
+-- Insert sample referral links (replace with actual user IDs from your users table)
+INSERT INTO public.community_referral_links (coach_id, referral_code) VALUES
+('your-user-id-1', 'johnsmith1234'),
+('your-user-id-2', 'sarahjones5678'),
+('your-user-id-3', 'mikebrown9012');
+*/ 

@@ -1,6 +1,6 @@
 'use client';
 
-import { Play, Clock, Users, Star } from 'lucide-react';
+import { Play, Clock, Users, Star, Plus } from 'lucide-react';
 
 const courses = [
   {
@@ -46,9 +46,15 @@ export function CoursesSection() {
     <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-bold text-gray-900">Enrolled Courses</h2>
+        <div className="flex items-center space-x-3">
+          <button className="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors">
+            <Plus className="w-4 h-4" />
+            <span>Add Course</span>
+          </button>
         <button className="text-purple-600 hover:text-purple-700 font-medium text-sm transition-colors">
           See all
         </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

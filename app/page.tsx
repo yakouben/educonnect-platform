@@ -13,11 +13,13 @@ import { RegistrationPage } from '@/components/RegistrationPage';
 import { SpacesSection } from '@/components/SpacesSection';
 import { ToastContainer, useToast } from '@/components/ui/toast';
 import { SkeletonCard } from '@/components/ui/skeleton';
+import { AuthModal } from '@/components/AuthModal';
 
 export default function Dashboard() {
   const [activeSection, setActiveSection] = useState('home');
-  const [isLoading, setIsLoading] = useState(true);
-  const { toasts, removeToast, success } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const { toasts, addToast, removeToast } = useToast();
 
   // Simulate initial loading
   useEffect(() => {
@@ -41,79 +43,71 @@ export default function Dashboard() {
   const renderContent = () => {
     if (isLoading) {
       return (
-        <div className="max-w-7xl mx-auto space-y-6 px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-6">
-            <SkeletonCard />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <SkeletonCard />
-              <SkeletonCard />
-              <SkeletonCard />
-            </div>
+        <div className="p-4 sm:p-6 lg:p-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
           </div>
         </div>
       );
     }
 
     switch (activeSection) {
+      case 'home':
+        return (
+          <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
+            {/* Test Auth Button */}
+            <div className="text-center">
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-xl transition-colors shadow-lg"
+              >
+                Test Authentication
+              </button>
+            </div>
+            
+            <ResponsiveBanner />
+            <HorizontalCourseScroll />
+            <MobileSocialFeed />
+          </div>
+        );
       case 'spaces':
         return (
-          <div className="max-w-7xl mx-auto space-y-6 px-4 sm:px-6 lg:px-8 animate-fade-in">
-            <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 rounded-2xl p-6 sm:p-8 text-white relative overflow-hidden shadow-2xl backdrop-blur-xl border border-blue-700/30">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-transparent"></div>
-              {/* Floating particles */}
-              <div className="absolute top-4 right-4 w-32 h-32 bg-white/5 rounded-full blur-3xl animate-float"></div>
-              <div className="absolute bottom-8 left-6 w-24 h-24 bg-white/3 rounded-full blur-2xl animate-float" style={{ animationDelay: '1s' }}></div>
-              <div className="relative z-10">
-                <h1 className="text-2xl sm:text-3xl font-bold mb-2 animate-slide-up">Community Spaces 🏠</h1>
-                <p className="text-blue-100 text-sm sm:text-base animate-slide-up" style={{ animationDelay: '100ms' }}>Create dedicated spaces for your community members to connect and collaborate</p>
-              </div>
-            </div>
-            <div className="animate-slide-up" style={{ animationDelay: '200ms' }}>
-              <SpacesSection />
-            </div>
+          <div className="p-4 sm:p-6 lg:p-8">
+            <SpacesSection />
           </div>
         );
       case 'courses':
         return (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in">
+          <div className="p-4 sm:p-6 lg:p-8">
             <CoursesPage />
           </div>
         );
       case 'members':
         return (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in">
+          <div className="p-4 sm:p-6 lg:p-8">
             <MembersPage />
           </div>
         );
       case 'messages':
         return (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in">
+          <div className="p-4 sm:p-6 lg:p-8">
             <MessagesPage />
           </div>
         );
       case 'registration':
         return (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in">
+          <div className="p-4 sm:p-6 lg:p-8">
             <RegistrationPage />
           </div>
         );
       default:
         return (
-          <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8 animate-fade-in">
-            {/* Banner Section */}
-            <div className="px-4 sm:px-6 lg:px-8 animate-slide-up">
-              <ResponsiveBanner />
-            </div>
-
-            {/* Courses Section */}
-            <div className="px-0 sm:px-6 lg:px-8 animate-slide-up" style={{ animationDelay: '100ms' }}>
-              <HorizontalCourseScroll />
-            </div>
-
-            {/* Social Feed */}
-            <div className="px-0 sm:px-6 lg:px-8 animate-slide-up" style={{ animationDelay: '200ms' }}>
-              <MobileSocialFeed />
-            </div>
+          <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
+            <ResponsiveBanner />
+            <HorizontalCourseScroll />
+            <MobileSocialFeed />
           </div>
         );
     }
@@ -145,6 +139,13 @@ export default function Dashboard() {
           </div>
         </div>
       </main>
+
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={showAuthModal} 
+        onClose={() => setShowAuthModal(false)}
+        initialMode="login"
+      />
 
       {/* Toast Notifications */}
       <ToastContainer toasts={toasts} onClose={removeToast} />
